@@ -10,13 +10,13 @@
         <!-- imagen de fondo -->
 
         <v-container class="margin-extra">
-            <v-card class="pa-12" min-height="180" shaped>
+            <v-card class="pa-12" min-height="125" shaped>
                 <v-layout wrap="">
                     <v-flex md12 xs12>
 
                         <h2 class="font-italic">
                             Registrate para: 
-                            <v-btn-toggle rounded class="mx-1">
+                            <v-btn-toggle rounded class="mx-3">
                                 <v-btn color="primary" text @click="tipoDeCuenta = 'freelancer'" >
                                     Buscar trabajo 
                                 </v-btn>
@@ -160,7 +160,7 @@
                             to="/login"
                             color="primary"
                             >
-                             Tengo una cuenta
+                             Cancelar
                             </v-btn>
 
                             <v-btn 
@@ -211,7 +211,6 @@ export default {
             contrasena: null,
             profesion: null,
 
-            
             // datos de control
             loading: false,
             tipoDeCuenta: null,
@@ -246,13 +245,14 @@ export default {
         }
     },
     async created() {
-        //llenar el select-input con las profesiones 
+        // llenanddo el select-input con las profesiones cuando se crea la vista
+        // para que el usuario pueda elegir su profesion a desempeñar 
         try {
             const res = await axios.get('/api/consultarProfesion');
             this.profesiones = res.data;
         } catch (error) {
             console.log(error);
-            this.snackbarData = { active: true, text: 'Error al cargar listado de profesiones...', color: 'error', icon: 'error'};
+            this.snackbarData = { active: true, text: 'Error al cargar listado de profesiones, vuelva luego...', color: 'error', icon: 'error'};
         }
     },
     methods: {
@@ -276,17 +276,17 @@ export default {
             if(this.tipoDeCuenta === 'freelancer') {
 
                 try {
+                    //Envia los datos al servidor para ser insertados y verifica el mensaje que devolvio el servidor
                     const res = await axios.post('/api/insertarFreelancer', datosDeUsuario);
-                    //verifica el mensaje que devolvio el servidor
-                    if(res.message === 'success'){
+                    if(res.data.message === 'success'){
                         //redireccionar a su perfil
                     }
                     else{
-                        this.snackbarData = { active: true, text: `${res.message}, intente mas tarde...`, color: 'error', icon: 'error'};
+                        this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
                     }
                 } catch (error) {
                     console.log(error);
-                    this.snackbarData = { active: true, text: 'Algo salio mal, comprube su conexion a internet o intentelo mas tarde...', color: 'error', icon: 'error'};
+                    this.snackbarData = { active: true, text: 'Algo salio mal, intentelo mas tarde...', color: 'error', icon: 'error'};
                 }
                 this.loading = false;
 
@@ -298,17 +298,17 @@ export default {
                     //eleminando la propiedad id_profesion, ya que no se utiliza en la tabla cliente
                     delete datosDeUsuario.id_profesion;
 
+                    //Envia los datos al servidor para ser insertados y verifica el mensaje que devolvio el servidor
                     const res = await axios.post('/api/insertarCliente', datosDeUsuario);
-                    //verifica el mensaje que devolvio el servidor
-                    if(res.message === 'success'){
+                    if(res.data.message === 'success'){
                         //redireccionar a su perfil
                     }
                     else{
-                        this.snackbarData = { active: true, text: `${res.message}, intente mas tarde...`, color: 'error', icon: 'error'};
+                        this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
                     }
                 } catch (error) {
                     console.log(error);
-                    this.snackbarData = { active: true, text: 'Algo salio mal, comprube su conexion a internet o intentelo mas tarde...', color: 'error', icon: 'error'};
+                    this.snackbarData = { active: true, text: 'Algo salio mal, intentelo mas tarde...', color: 'error', icon: 'error'};
                 }
                 this.loading = false;
 
