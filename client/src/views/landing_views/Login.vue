@@ -41,7 +41,7 @@
                              class="my-1" 
                              outlined ></v-text-field>
 
-                            <v-btn class="my-5" :loading="loading" @click="snackbarData.active = true "  x-large block color="primary">
+                            <v-btn class="my-5" :loading="loading" @click="Login() "  x-large block color="primary">
                                 Acceder
                             </v-btn>
 
@@ -63,6 +63,7 @@
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Snackbar from '@/components/Snackbar.vue'
+import axios from 'axios'
 
 export default {
     name: 'Login',
@@ -77,10 +78,27 @@ export default {
             correo: null,
             contrasena: null,
             loading: false,
-            snackbarData: { active: false, text: 'Datos incorrectos', color: 'error', icon: 'error'}
+            //snackbarData: { active: false, text: 'Datos incorrectos', color: 'error', icon: 'error'}
         }
     },
+    methods: {
+        async Login() {
+            //this.loading = true;
+            const datosDeUsuario = {
+                correo: this.correo,
+                contrasena: this.contrasena,
+            };
+            //Envia los datos al servidor 
+            const res = await axios.post('/api/login', datosDeUsuario);
+            if(res.data.message === 'success'){
+              //redireccionar a su perfil
+            } else {
+                console.log('failed')
+            }
+        }
+    }
 }
+                
 </script>
 
 <style scoped>

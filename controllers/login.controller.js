@@ -1,23 +1,26 @@
 const pool = require('../db_connection');
 
-const clienteCrtl = {};
+//ERROR CON AES_DECRYPT SE NECESITA ENCRIPTAR DIRECTAMENTE EN NODE .. Pendiente
 
-clienteCrtl.login = async (req, res) => {
+const loginCrtl = {};
+loginCrtl.sesion = async (req, res) => {
     try{
         //realizamos una  consulta para ver si el correo y la contraseña son correctos,
-        const correos = await pool.query('SELECT correo,AES_DECRYPT(contrasena,love) contrasena FROM cliente');
+        //NOTA: 'love' es una llave de encriptacion, es decir puede utilizarse cualquier string pero... debe ser la misma con la que se encripto
+        const correos = await pool.query("SELECT correo, AES_DECRYPT(contrasena,'love') contrasena FROM cliente WHERE correo='"+req.body.correo+"'");
         var match = false;
         correos.forEach( (x) => {
-            if(x.correo === req.body.correo && x.contrasena=== req.body.contrasena){
+            if(x.correo === req.body.correo && x.contrasena === req.body.contrasena){
                 match = true;
             }
         });
 
         //si la contraseña coincidio
-        if(!match){
-            console.log('si')
+        if(match === true){
+            console.log('Se ha iniciado sesion correctamente') //preliminar
             res.status(200).json({ message: 'success'});
         }else{
+            console.log('Correo o contraseña incorrectos') //preliminar
             res.status(200).json({ message: 'incorrecto'});
         }
     }catch(error){
@@ -28,4 +31,4 @@ clienteCrtl.login = async (req, res) => {
 
 
 
-module.exports = clienteCrtl;
+module.exports = loginCrtl;

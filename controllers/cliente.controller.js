@@ -2,7 +2,6 @@ const pool = require('../db_connection');
 
 const clienteCrtl = {};
 
-
 clienteCrtl.consultar = async (req, res) => {
     try{
         const cliente = await pool.query('SELECT * FROM cliente');
@@ -14,6 +13,7 @@ clienteCrtl.consultar = async (req, res) => {
 };
 
 clienteCrtl.insertar = async (req, res) => {
+    
     try{
         //realizamos una  consulta para ver si el correo que envio el usuario esta en uso o no,
         const correos = await pool.query('SELECT correo FROM cliente');
@@ -27,6 +27,7 @@ clienteCrtl.insertar = async (req, res) => {
         //si el correo no esta en uso, se inserta, sino el servidor responde con un mensaje de que ya esta en uso
         if(!enUso){
             //Insert mas especifico para asi encriptar la contraseña con la funcion de mysql AES_ENCRYPT
+            //NOTA: 'love' es una llave de encriptacion, es decir puede utilizarse cualquier string pero... debe ser la misma con la que se encripto
             const result = await pool.query("INSERT INTO `cliente` ( `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `estado`) VALUES ( '"+req.body.nombre+"', '"+req.body.apellido+"', '"+req.body.correo+"', '"+req.body.telefono+"', '"+req.body.cedula+"', '"+req.body.direccion+"', AES_ENCRYPT('"+req.body.contrasena+"','love'), '"+req.body.estado+"')");
             res.status(200).json({ message: 'success'});
         }else{
