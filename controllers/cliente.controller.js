@@ -26,7 +26,8 @@ clienteCrtl.insertar = async (req, res) => {
 
         //si el correo no esta en uso, se inserta, sino el servidor responde con un mensaje de que ya esta en uso
         if(!enUso){
-            const result = await pool.query('INSERT INTO cliente set ?', req.body);
+            //Insert mas especifico para asi encriptar la contraseña con la funcion de mysql AES_ENCRYPT
+            const result = await pool.query("INSERT INTO `cliente` ( `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `estado`) VALUES ( '"+req.body.nombre+"', '"+req.body.apellido+"', '"+req.body.correo+"', '"+req.body.telefono+"', '"+req.body.cedula+"', '"+req.body.direccion+"', AES_ENCRYPT('"+req.body.contrasena+"','love'), '"+req.body.estado+"')");
             res.status(200).json({ message: 'success'});
         }else{
             res.status(200).json({ message: 'El correo ingresado se encuentra en uso por otra cuenta'});
