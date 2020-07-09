@@ -1,7 +1,6 @@
 const express = require('express');
 //Middleware para ver las peticiones al servidor en la consola
 const morgan = require('morgan');
-
 //inicializacion del servidor
 const app = express();
 

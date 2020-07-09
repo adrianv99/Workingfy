@@ -60,10 +60,12 @@
 
 <script>
 // @ is an alias to /src
+import Vue from 'vue'; 
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import axios from 'axios'
+import store from '../../store/index'
 
 export default {
     name: 'Login',
@@ -72,11 +74,15 @@ export default {
         Footer,
         Snackbar
     },
+
+
+
+
     data() {
         return {
             img: require('@/assets/SprintingDoodle.png'),
-            correo: null,
-            contrasena: null,
+            correo: 'ssss@gmail.com',
+            contrasena: 'samuelperezvaldez',
             loading: false,
             //snackbarData: { active: false, text: 'Datos incorrectos', color: 'error', icon: 'error'}
         }
@@ -90,13 +96,18 @@ export default {
             };
             //Envia los datos al servidor 
             const res = await axios.post('/api/login', datosDeUsuario);
-            if(res.data.message === 'success'){
-              //redireccionar a su perfil
+            if(res.data.message === 'success' && 'token' in res.data){
+                this.$session.start()
+                this.$session.set('jwt', res.data.token)
+                //Vue.http.headers.common['Authorization'] = 'Bearer ' + res.data.token
+                console.log(this.$session.getAll())
+                this.$router.push('/HomeCliente')
             } else {
                 console.log('failed')
             }
         }
     }
+    
 }
                 
 </script>

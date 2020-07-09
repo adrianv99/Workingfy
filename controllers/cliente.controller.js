@@ -1,4 +1,5 @@
 const pool = require('../db_connection');
+const encode = require('nodejs-base64-encode');
 
 const clienteCrtl = {};
 
@@ -26,9 +27,10 @@ clienteCrtl.insertar = async (req, res) => {
 
         //si el correo no esta en uso, se inserta, sino el servidor responde con un mensaje de que ya esta en uso
         if(!enUso){
-            //Insert mas especifico para asi encriptar la contraseña con la funcion de mysql AES_ENCRYPT
             //NOTA: 'love' es una llave de encriptacion, es decir puede utilizarse cualquier string pero... debe ser la misma con la que se encripto
-            const result = await pool.query("INSERT INTO `cliente` ( `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `estado`) VALUES ( '"+req.body.nombre+"', '"+req.body.apellido+"', '"+req.body.correo+"', '"+req.body.telefono+"', '"+req.body.cedula+"', '"+req.body.direccion+"', AES_ENCRYPT('"+req.body.contrasena+"','love'), '"+req.body.estado+"')");
+            req.body.contrasena= encode.encode(""+req.body.contrasena+"", 'base64')
+            //Insert con la contraseña previamente encriptada
+            const result = await pool.query('INSERT INTO cliente set ?', req.body);
             res.status(200).json({ message: 'success'});
         }else{
             res.status(200).json({ message: 'El correo ingresado se encuentra en uso por otra cuenta'});

@@ -198,6 +198,7 @@ export default {
         Footer,
         Snackbar
     },
+    
     data() {
         return {
 
@@ -244,6 +245,8 @@ export default {
 
         }
     },
+
+    
     async created() {
         // llenanddo el select-input con las profesiones cuando se crea la vista
         // para que el usuario pueda elegir su profesion a desempeñar 
