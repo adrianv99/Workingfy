@@ -16,7 +16,7 @@
 
                         <h2 class="font-italic">
                             Registrate para: 
-                            <v-btn-toggle rounded class="mx-3">
+                            <v-btn-toggle class="mx-3">
                                 <v-btn color="primary" text @click="tipoDeCuenta = 'freelancer'" >
                                     Buscar trabajo 
                                 </v-btn>
@@ -106,7 +106,7 @@
                                     class="my-1"
                                     outlined 
                                     required
-                                    hint="Formato: provincia, sector, calle"
+                                    hint="Formato: Pais, ciudad, sector"
                                     :rules="rules.default"
                                     ></v-text-field>
                                 </v-flex>
@@ -180,14 +180,12 @@
                 </v-layout>
             </v-card>
         </v-container>
-
-        <Footer/>
+        
     </div>
 </template>
 
 <script>
 import Navbar from '@/components/Navbar.vue';
-import Footer from '@/components/Footer.vue';
 import Snackbar from '@/components/Snackbar.vue';
 import axios from 'axios';
 
@@ -195,7 +193,6 @@ export default {
     name: 'Registrate',
     components:{
         Navbar,
-        Footer,
         Snackbar
     },
     
@@ -273,49 +270,34 @@ export default {
                 id_profesion: this.profesion,
                 estado: 'A'
             };
-            
 
             //verifica que tipo de cuenta se creara el usuario e implementar la ruta correcta
-            if(this.tipoDeCuenta === 'freelancer') {
-
-                try {
-                    //Envia los datos al servidor para ser insertados y verifica el mensaje que devolvio el servidor
-                    const res = await axios.post('/api/insertarFreelancer', datosDeUsuario);
-                    if(res.data.message === 'success'){
-                        //redireccionar a su perfil
-                    }
-                    else{
-                        this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
-                    }
-                } catch (error) {
-                    console.log(error);
-                    this.snackbarData = { active: true, text: 'Algo salio mal, intentelo mas tarde...', color: 'error', icon: 'error'};
-                }
-                this.loading = false;
-
+            var route = '';
+            if(this.tipoDeCuenta === 'cliente'){
+                route = 'insertarCliente';
+                //eleminando la propiedad id_profesion, ya que no se utiliza en la tabla cliente
+                delete datosDeUsuario.id_profesion; 
+            } else {
+                route = 'insertarFreelancer';
             }
-            //enviando datos a la ruta de cliente, para registrarlo
-            else {
-
-                try {
-                    //eleminando la propiedad id_profesion, ya que no se utiliza en la tabla cliente
-                    delete datosDeUsuario.id_profesion;
-
-                    //Envia los datos al servidor para ser insertados y verifica el mensaje que devolvio el servidor
-                    const res = await axios.post('/api/insertarCliente', datosDeUsuario);
-                    if(res.data.message === 'success'){
-                        //redireccionar a su perfil
-                    }
-                    else{
-                        this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
-                    }
-                } catch (error) {
-                    console.log(error);
-                    this.snackbarData = { active: true, text: 'Algo salio mal, intentelo mas tarde...', color: 'error', icon: 'error'};
+            
+            //Envia los datos al servidor para ser insertados
+            // y verifica el mensaje que devolvio el servidor
+            try {
+                const res = await axios.post(`/api/${route}`, datosDeUsuario);
+                if(res.data.message === 'success'){
+                    this.$router.push('/login');
                 }
+                else{
+                    this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
+                    this.loading = false;
+                }
+            } catch (error) {
+                console.log(error);
+                this.snackbarData = { active: true, text: 'Algo salio mal, intentelo mas tarde...', color: 'error', icon: 'error'};
                 this.loading = false;
-
             }
+                
         },
     }
 }

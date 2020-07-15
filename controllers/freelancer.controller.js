@@ -17,8 +17,16 @@ freelancerCrtl.consultar = async (req, res) => {
 freelancerCrtl.insertar = async (req, res) => {
     try{
         //realizamos una  consulta para ver si el correo que envio el usuario esta en uso o no,
-        const correos = await pool.query('SELECT correo FROM freelancer');
+       //comprobando en la tabla freelancer
+        var correos = await pool.query('SELECT correo FROM freelancer');
         var enUso = false;
+        correos.forEach( (x) => {
+            if(x.correo === req.body.correo){
+                enUso = true;
+            }
+        });
+        //comprobando en la tabla cliente
+        correos = await pool.query('SELECT correo FROM cliente');
         correos.forEach( (x) => {
             if(x.correo === req.body.correo){
                 enUso = true;

@@ -6,11 +6,13 @@ const token = new TokenGenerator();
 //Encrypt library
 
 const loginCrtl = {};
+
 loginCrtl.sesion = async (req, res) => {
     try{
-        //realizamos una  consulta para ver si el correo y la contraseña son correctos,
+        //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla cliente,
         const correos = await pool.query("SELECT correo, contrasena FROM cliente WHERE correo='"+req.body.correo+"'");
         var match = false;
+        var roll = '';
         correos.forEach( (qCliente) => {
 
             //Procede a desencriptar la contraseña y almacenarla nuevamente en el query
@@ -18,16 +20,17 @@ loginCrtl.sesion = async (req, res) => {
             
             if(qCliente.correo === req.body.correo && qCliente.contrasena === req.body.contrasena){
                 match = true;
+                roll = 'client';
             }
         });
 
         //si la contraseña coincidio
         if(match === true){
             console.log('Se ha iniciado sesion correctamente') //preliminar
-            res.status(200).json({ message: 'success', token: token.generate()});
+            res.status(200).json({ message: 'success', token: token.generate(), roll: roll});
         }else{
-            console.log('Correo o contraseña incorrectos') //preliminar
-            res.status(400).json({ message: 'failed'});
+            console.log('Correo o contraseña incorrectos'); // preliminar
+            res.status(200).json({ message: 'Correo o contraseña incorrectos'});
         }
     }catch(error){
         console.log(error)

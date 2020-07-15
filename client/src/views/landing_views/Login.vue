@@ -53,8 +53,6 @@
             </v-card>
         </v-container>
 
-        <Footer/>
-
     </div>
 </template>
 
@@ -62,7 +60,6 @@
 // @ is an alias to /src
 import Vue from 'vue'; 
 import Navbar from '@/components/Navbar.vue'
-import Footer from '@/components/Footer.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import axios from 'axios'
 import store from '../../store/index'
@@ -71,7 +68,6 @@ export default {
     name: 'Login',
     components:{
         Navbar,
-        Footer,
         Snackbar
     },
 
@@ -84,26 +80,34 @@ export default {
             correo: 'ssss@gmail.com',
             contrasena: 'samuelperezvaldez',
             loading: false,
-            //snackbarData: { active: false, text: 'Datos incorrectos', color: 'error', icon: 'error'}
+            snackbarData: { active: false, text: '', color: 'error', icon: 'error'}
         }
     },
     methods: {
         async Login() {
-            //this.loading = true;
+            this.loading = true;
             const datosDeUsuario = {
                 correo: this.correo,
                 contrasena: this.contrasena,
             };
-            //Envia los datos al servidor 
-            const res = await axios.post('/api/login', datosDeUsuario);
-            if(res.data.message === 'success' && 'token' in res.data){
-                this.$session.start()
-                this.$session.set('jwt', res.data.token)
-                //Vue.http.headers.common['Authorization'] = 'Bearer ' + res.data.token
-                console.log(this.$session.getAll())
-                this.$router.push('/HomeCliente')
-            } else {
-                console.log('failed')
+
+            try {
+                 //Envia los datos al servidor 
+                const res = await axios.post('/api/login', datosDeUsuario);
+                if(res.data.message === 'success' && 'token' in res.data){
+                    this.$session.start()
+                    this.$session.set('jwt', res.data.token)
+                    //Vue.http.headers.common['Authorization'] = 'Bearer ' + res.data.token
+                    console.log(this.$session.getAll())
+                    this.$router.push('/explorar')
+                } else {
+                    console.log('failed');
+                    this.snackbarData = { active: true, text: 'Datos incorrectos', color: 'error', icon: 'error'}
+                    this.loading = false;
+                }
+            } catch (error) {
+                this.snackbarData = { active: true, text: 'Algo salio mal, intente mas tarde', color: 'error', icon: 'error'}
+                this.loading = false;
             }
         }
     }

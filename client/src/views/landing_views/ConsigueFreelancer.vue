@@ -23,7 +23,6 @@ import Carosuel from '@/components/Carosuel.vue'
 import Section1 from '@/components/Section1.vue'
 import Section2 from '@/components/Section2.vue'
 import Section3 from '@/components/Section3.vue'
-import Footer from '@/components/Footer.vue'
 
 
 export default {
@@ -33,8 +32,7 @@ export default {
         Carosuel,
         Section1,
         Section2,
-        Section3,
-        Footer
+        Section3
     },
     data() {
         return {

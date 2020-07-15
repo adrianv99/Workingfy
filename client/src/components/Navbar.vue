@@ -5,39 +5,50 @@
     flat
     tile
     >
-    <v-toolbar dense height="75px" color="primary">
+        <v-toolbar dense height="75px" color="primary">
 
-      <!--Titulo-->
-      <v-toolbar-title class="ml-12">
-          <h2 style="color: white">Workingfy</h2>
-      </v-toolbar-title>
-      <!--Titulo-->
+        <!--Titulo-->
+        <v-toolbar-title class="ml-12">
+            <h2 style="color: white">Workingfy</h2>
+        </v-toolbar-title>
+        <!--Titulo-->
 
-      <v-spacer></v-spacer>
+        <v-spacer></v-spacer>
 
-      <!-- Renderizado de las opciones en el menu de navegacion pantalla md-->  
-      <div v-for="(option,index) in navOptions" :key="index" class="mx-3 hidden-sm-and-down">
-          <v-btn  
-          :text="option.styles.text"
-          :outlined="option.styles.outline"
-          :color="option.styles.color"
-          :to="option.route"
-          dark=""
-          tile=""
-          large=""
-          >
-              {{option.text}}
-          </v-btn>
-      </div>
-      <!-- Renderizado de las opciones en el menu de navegacion pantalla md-->
+        <!-- Renderizado de las opciones en el menu de navegacion pantalla md-->  
+        <div v-for="(option,index) in navOptions" :key="index" class="mx-3 hidden-sm-and-down">
+            <v-btn  
+            :text="option.styles.text"
+            :outlined="option.styles.outline"
+            :color="option.styles.color"
+            :to="option.route"
+            dark=""
+            tile=""
+            large=""
+            >
+                {{option.text}}
+            </v-btn>
+        </div>
+        <v-btn 
+            v-if="tipoDeOpciones" 
+            text=""
+            dark=""
+            tile=""
+            large=""
+            class="mx-3 hidden-sm-and-down"
+            @click="cerrarSesion()"
+            >
+                Salir
+        </v-btn>
+        <!-- Renderizado de las opciones en el menu de navegacion pantalla md-->
 
-      <!--Boton que aparecera en pantallas sm-->
-      <div class="hidden-md-and-up">
-         <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      </div>
-      <!--Boton que aparecera en pantallas sm-->
+        <!--Boton que aparecera en pantallas sm-->
+        <div class="hidden-md-and-up">
+            <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+        </div>
+        <!--Boton que aparecera en pantallas sm-->
 
-    </v-toolbar>
+        </v-toolbar>
     </v-card>
 
     <!-- Renderizado de las opciones en el menu de navegacion pantalla sm-->
@@ -70,6 +81,24 @@
             </v-list-item>
             <v-divider></v-divider>
         </div>
+        <v-list-item>
+            <v-list-item-content>
+                <v-list-item-title>
+                        <v-btn 
+                        v-if="tipoDeOpciones" 
+                        text=""
+                        dark=""
+                        tile=""
+                        large=""
+                        class="mx-5"
+                        @click="cerrarSesion()"
+                        >
+                            Salir
+                        </v-btn>
+                </v-list-item-title>
+            </v-list-item-content>
+        </v-list-item>
+       
     </v-navigation-drawer>     
     <!-- Renderizado de las opciones en el menu de navegacion pantalla sm-->
 
@@ -83,7 +112,26 @@ export default {
     data(){
         return{
             drawer: false,
-            navOptions: [
+            navOptions: []
+        }
+    },
+    props: ['tipoDeOpciones'],
+    created(){
+        if(this.tipoDeOpciones === 'userOptions') {
+            this.navOptions = [
+                {
+                    text: 'Panel',
+                    route: '/panel',
+                    styles:{ text: true, outline: false, color: ''}
+                },
+                {
+                    text: 'Explorar',
+                    route: '/explorar',
+                    styles:{ text: true, outline: false, color: ''}
+                }
+            ]
+        }else {
+            this.navOptions = [
                 { 
                     text: 'Inicio',
                     route:'/',
@@ -111,11 +159,13 @@ export default {
                 }
             ]
         }
-    }
+    },
+    methods: {
+        cerrarSesion(){
+
+        }
+    },
 }
 </script>
 
-<style scoped>
-    
-</style>
 

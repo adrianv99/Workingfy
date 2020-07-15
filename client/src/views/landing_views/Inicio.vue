@@ -76,16 +76,13 @@
 // @ is an alias to /src
 import Navbar from '@/components/Navbar.vue'
 import Carosuel from '@/components/Carosuel.vue'
-import Footer from '@/components/Footer.vue'
 
 
 export default {
   name: 'Home',
   components: {
     Navbar,
-    Carosuel,
-    Footer,
-  
+    Carosuel,  
   },
   data() {
     return {

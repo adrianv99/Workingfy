@@ -14,11 +14,18 @@ clienteCrtl.consultar = async (req, res) => {
 };
 
 clienteCrtl.insertar = async (req, res) => {
-    
     try{
         //realizamos una  consulta para ver si el correo que envio el usuario esta en uso o no,
-        const correos = await pool.query('SELECT correo FROM cliente');
+        //comprobando en la tabla freelancer
+        var correos = await pool.query('SELECT correo FROM freelancer');
         var enUso = false;
+        correos.forEach( (x) => {
+            if(x.correo === req.body.correo){
+                enUso = true;
+            }
+        });
+        //comprobando en la tabla cliente
+        correos = await pool.query('SELECT correo FROM cliente');
         correos.forEach( (x) => {
             if(x.correo === req.body.correo){
                 enUso = true;
@@ -30,7 +37,7 @@ clienteCrtl.insertar = async (req, res) => {
             //NOTA: 'love' es una llave de encriptacion, es decir puede utilizarse cualquier string pero... debe ser la misma con la que se encripto
             req.body.contrasena= encode.encode(""+req.body.contrasena+"", 'base64')
             //Insert con la contraseña previamente encriptada
-            const result = await pool.query('INSERT INTO cliente set ?', req.body);
+            await pool.query('INSERT INTO cliente set ?', req.body);
             res.status(200).json({ message: 'success'});
         }else{
             res.status(200).json({ message: 'El correo ingresado se encuentra en uso por otra cuenta'});
