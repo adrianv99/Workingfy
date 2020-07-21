@@ -10,7 +10,7 @@
         </v-card-subtitle>
 
         <v-card-title class="my-1 display-1">
-            Arreglar un hinodoro
+            Arreglar un inodoro
         </v-card-title>
 
         <v-card-subtitle >

@@ -6,6 +6,7 @@ import ConsigueTrabajo from '../views/landing_views/ConsigueTrabajo.vue'
 import Login from '../views/landing_views/Login.vue'
 import Registrate from '../views/landing_views/Registrate.vue'
 import Explorar from '../views/users_views/Explorar.vue'
+import Panel from '../views/users_views/Panel.vue'
 
 
 Vue.use(VueRouter)
@@ -40,6 +41,11 @@ Vue.use(VueRouter)
     path: '/explorar',
     name: 'Explorar',
     component: Explorar
+  },
+  {
+    path: '/panel',
+    name: 'Panel',
+    component: Panel
   }
 ]
 

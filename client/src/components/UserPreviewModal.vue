@@ -20,35 +20,35 @@
             ></v-rating>
             <div class="grey--text ml-1">4.5 (413)</div>
             
-            <h2 class="my-8">
+            <h2 class="my-6">
               <v-icon> mail </v-icon> Correo: 
               <span class="primary--text">manueltorres@gmail.com</span>
             </h2>
 
             <v-divider></v-divider>
             
-            <h2 class="my-8">
+            <h2 class="my-6">
               <v-icon> phone </v-icon>  Teléfono: 
               <span class="primary--text">8093458750</span>
             </h2>
 
             <v-divider></v-divider>
 
-            <h2 class="my-8">
+            <h2 class="my-6">
                <v-icon> mdi-account-tie </v-icon> Profesión: 
                <span class="primary--text">Carpintero</span>
             </h2>
 
             <v-divider></v-divider>
 
-            <h2 class="my-8">
+            <h2 class="my-6">
               <v-icon>  mdi-bookmark  </v-icon> Trabajos publicados: 
               <span class="primary--text">8</span>
             </h2>
 
             <v-divider></v-divider>
 
-            <h2 class="my-8">
+            <h2 class="my-6">
                <v-icon> mdi-checkbox-marked </v-icon> Trabajos completados: 
                <span class="primary--text">5</span>
             </h2>

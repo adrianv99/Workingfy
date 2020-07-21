@@ -1,0 +1,150 @@
+<template>
+  <v-row justify="center" align="center">
+    
+    <v-dialog v-model="editUser" width="1200" persistent>
+      <v-card class="mx-auto pa-5">
+
+        <v-card-title class="display-1 my-3">
+            Editar datos
+        </v-card-title>
+
+        <v-form
+        v-model="validar"
+        :lazy-validation="lazy"
+        >
+            <v-card-text>
+                <v-container fluid>
+
+                    <v-row>
+                        <v-col cols="12" md="4">
+                            <v-text-field
+                            type="text"  
+                            label="Nombre" 
+                            outlined 
+                            required
+                            :rules="rules.default"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field 
+                            type="text"  
+                            label="Apellido" 
+                            outlined 
+                            required
+                            :rules="rules.default"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field
+                            type="text"  
+                            label="Telefono" 
+                            outlined 
+                            required
+                            :rules="rules.default"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row>
+                        <v-col cols="12" md="4">
+                            <v-text-field 
+                            type="text"  
+                            label="Direccion" 
+                            outlined 
+                            required
+                            :rules="rules.default"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field
+                            type="text"  
+                            label="Correo" 
+                            outlined 
+                            required
+                            :rules="rules.correo"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col cols="12" md="4">
+                            <v-text-field 
+                            type="password"  
+                            label="Contraseña" 
+                            outlined 
+                            required
+                            :rules="rules.contrasena"
+                            ></v-text-field>
+                        </v-col>
+                    </v-row>
+
+                    <v-row> 
+                        <v-col cols="12" md="4">
+                            <v-select
+                            label="Profesion"
+                            outlined
+                            :rules="rules.profesion"
+                            ></v-select>
+                        </v-col>
+                    </v-row>
+
+                </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+                <v-btn color="primary" class="pa-5" type="submmit">
+                    guardar
+                </v-btn>
+                <v-btn color="primary" text @click="closeUserEditModal">
+                    cancelar
+                </v-btn>
+
+                <v-spacer></v-spacer>
+
+                <v-btn color="error">
+                    <v-icon class="mx-1">error</v-icon>
+                    eliminar cuenta
+                </v-btn>
+            </v-card-actions>
+        </v-form>
+
+      </v-card>
+    </v-dialog>
+
+  </v-row>
+</template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex'
+
+export default {
+    name: 'UserEditModal',
+    data(){
+        return {
+            validar: true,
+            lazy: false,
+            // reglas del formulario, para validaciones 
+            rules: {
+                default: [
+                    v => !!v || 'Campo obligatorio', 
+                    v => ( v && v.length <= 50) || 'Debe tener menos de 50 caracteres'
+                ],
+                correo: [
+                    v => /.+@.+\..+/.test(v) || 'No es un correo valido, verifique'
+                ],
+                contrasena: [
+                   v => !!v || 'Campo obligatorio', 
+                   v => ( v && v.length >= 8) || 'Debe contener al menos 8 caracteres'
+                ],
+                profesion: [
+                    v => !!v || 'Campo obligatorio'
+                ]
+            }
+        }
+    },
+    computed: {
+         ...mapGetters(["editUser"])
+    },
+    methods: {
+        ...mapActions(["closeUserEditModal"])
+    },
+
+}
+</script>
