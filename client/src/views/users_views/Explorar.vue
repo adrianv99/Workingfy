@@ -19,14 +19,30 @@
                                 <v-col cols="12" md="12">
                                     <h4 class="title my-2">Filtrar por: </h4>
                                     <v-radio-group row v-model="filterOption">
-                                        <v-radio label="Fecha" color="info" value="fecha"></v-radio>
-                                        <v-radio label="Ubicación" color="info" value="ubicacion"></v-radio>
-                                        <v-radio label="Profesión" color="info" value="profesion"></v-radio>
+                                        <v-radio 
+                                        v-if="userData.id_profesion"
+                                        label="Fecha" 
+                                        color="info" 
+                                        value="fecha"
+                                        ></v-radio>
+
+                                        <v-radio 
+                                        v-if="userData.id_profesion"
+                                        label="Ubicación" 
+                                        color="info" 
+                                        value="ubicacion"
+                                        ></v-radio>
+
+                                        <v-radio 
+                                        label="Profesión" 
+                                        color="info" 
+                                        value="profesion"
+                                        ></v-radio>
                                     </v-radio-group>
                                 </v-col>
                             </v-row>
 
-                            <v-row v-if="filterOption === 'fecha'">
+                            <v-row v-if="filterOption === 'fecha'" >
                                 <v-col cols="12" md="4">
                                     <v-text-field
                                     type="date"  
@@ -69,6 +85,9 @@
                                     <v-select
                                     label="Profesión"
                                     outlined
+                                    :items="professionsData"
+                                    item-text="nombre"
+                                    item-value="id"
                                     ></v-select>
                                 </v-col>
                             </v-row>
@@ -86,14 +105,10 @@
 
             <v-layout wrap>
                 <v-flex md8>
+                    {{ userData }}
+                    <Post class="my-10" v-if="userData.id_profesion" /> 
                     
-                    <!-- si el roll del usuario es freelancer-->
-                    <Post class="my-10"/> 
-                    <!-- si el roll del usuario es freelancer-->
-                    
-                    <!-- si el roll del usuario es cliente-->
-                    <FreelancerCard class="my-10" />
-                    <!-- si el roll del usuario es cliente-->
+                    <FreelancerCard class="my-10" v-if="!userData.id_profesion" />
 
                 </v-flex>
             </v-layout>
@@ -107,6 +122,8 @@ import Navbar from '@/components/Navbar.vue'
 import Post from '@/components/Post.vue'
 import UserPreviewModal from '@/components/UserPreviewModal.vue'
 import FreelancerCard from '@/components/FreelancerCard.vue'
+import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     components:{
@@ -126,6 +143,16 @@ export default {
             this.$router.push('/')
         }
     },
+    methods: {
+        ...mapActions(["fetchUser","fetchProfessions"])
+    },
+    computed: {
+        ...mapGetters(["userData","professionsData"])
+    },
+    async created() {
+        let token = this.$session.get('jwt')
+        this.fetchUser(token);
+    }
     
 }
 </script>

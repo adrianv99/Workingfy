@@ -1,33 +1,52 @@
 const pool = require('../db_connection');
 const encode = require('nodejs-base64-encode');
-const TokenGenerator = require('uuid-token-generator');
-const token = new TokenGenerator();
-
-//Encrypt library
+const jwt = require('jsonwebtoken');
 
 const loginCrtl = {};
 
-loginCrtl.sesion = async (req, res) => {
+loginCrtl.signin = async (req, res) => {
     try{
-        //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla cliente,
-        const correos = await pool.query("SELECT correo, contrasena FROM cliente WHERE correo='"+req.body.correo+"'");
+
         var match = false;
         var roll = '';
-        correos.forEach( (qCliente) => {
+        var userId = null;
 
-            //Procede a desencriptar la contraseña y almacenarla nuevamente en el query
-            qCliente.contrasena = 	encode.decode(""+qCliente.contrasena+"", 'base64')
-            
-            if(qCliente.correo === req.body.correo && qCliente.contrasena === req.body.contrasena){
+        //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla cliente,
+        var datosCliente = await pool.query("SELECT id, correo, contrasena FROM cliente WHERE correo='"+req.body.correo+"'");
+        
+        if(Object.entries(datosCliente).length === 1){
+            //Procede a desencriptar la contraseña y compararla con la que envio el usuario
+            datosCliente[0].contrasena = encode.decode(""+datosCliente[0].contrasena+"", 'base64')
+            if(datosCliente[0].correo === req.body.correo && datosCliente[0].contrasena === req.body.contrasena){
+                userId = datosCliente[0].id;
                 match = true;
-                roll = 'client';
+                roll = 'Cliente';
             }
-        });
+        }
+        
+        //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla freelancer,
+        var datosFreelancer = await pool.query("SELECT id, correo, contrasena FROM freelancer WHERE correo='"+req.body.correo+"'");
+     
+        if(Object.entries(datosFreelancer).length === 1){
+            //Procede a desencriptar la contraseña y compararla con la que envio el usuario
+            datosFreelancer[0].contrasena = encode.decode(""+datosFreelancer[0].contrasena+"", 'base64');
+            if(datosFreelancer[0].correo === req.body.correo && datosFreelancer[0].contrasena === req.body.contrasena){
+                userId = datosFreelancer[0].id;
+                match = true;
+                roll = 'Freelancer';
+            }
+        }
 
-        //si la contraseña coincidio
+
+        //si la contrasena coincidio
         if(match === true){
-            console.log('Se ha iniciado sesion correctamente') //preliminar
-            res.status(200).json({ message: 'success', token: token.generate(), roll: roll});
+
+            //generar token en base al id y una clave del sistema (oK15w9nX)
+            const token = jwt.sign({ id: userId, roll }, 'oK15w9nX', {
+                expiresIn: 60 * 60 * 24 // expira en 24h
+            });
+
+            res.status(200).json({ message: 'success', token });
         }else{
             console.log('Correo o contraseña incorrectos'); // preliminar
             res.status(200).json({ message: 'Correo o contraseña incorrectos'});

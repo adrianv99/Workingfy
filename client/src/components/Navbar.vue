@@ -162,7 +162,8 @@ export default {
     },
     methods: {
         cerrarSesion(){
-
+            this.$session.destroy();
+            this.$router.push('/login');
         }
     },
 }

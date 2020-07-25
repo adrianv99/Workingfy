@@ -1,7 +1,7 @@
 <template>
   <v-row justify="center" align="center">
     
-    <v-dialog v-model="editUser" width="1200" persistent>
+    <v-dialog v-model="editUserModal" width="1200" persistent>
       <v-card class="mx-auto pa-5">
 
         <v-card-title class="display-1 my-3">
@@ -18,6 +18,7 @@
                     <v-row>
                         <v-col cols="12" md="4">
                             <v-text-field
+                            v-model="userData.nombre"
                             type="text"  
                             label="Nombre" 
                             outlined 
@@ -27,6 +28,7 @@
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field 
+                            v-model="userData.apellido"
                             type="text"  
                             label="Apellido" 
                             outlined 
@@ -36,6 +38,7 @@
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field
+                            v-model="userData.telefono"
                             type="text"  
                             label="Telefono" 
                             outlined 
@@ -48,6 +51,7 @@
                     <v-row>
                         <v-col cols="12" md="4">
                             <v-text-field 
+                            v-model="userData.direccion"
                             type="text"  
                             label="Direccion" 
                             outlined 
@@ -57,6 +61,7 @@
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field
+                            v-model="userData.correo"
                             type="text"  
                             label="Correo" 
                             outlined 
@@ -65,19 +70,26 @@
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-text-field 
-                            type="password"  
+                            <v-text-field
+                            v-model="userData.contrasena"  
                             label="Contraseña" 
                             outlined 
                             required
                             :rules="rules.contrasena"
+                            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                            :type="showPass ? 'text' : 'password'"
+                            @click:append="showPass = !showPass"
                             ></v-text-field>
                         </v-col>
                     </v-row>
 
-                    <v-row> 
+                    <v-row v-if="userData.id_profesion"> 
                         <v-col cols="12" md="4">
                             <v-select
+                            v-model="userData.id_profesion"
+                            :items="professionsData"
+                            item-text="nombre"
+                            item-value="id"
                             label="Profesion"
                             outlined
                             :rules="rules.profesion"
@@ -118,6 +130,7 @@ export default {
     name: 'UserEditModal',
     data(){
         return {
+            showPass: false,
             validar: true,
             lazy: false,
             // reglas del formulario, para validaciones 
@@ -140,10 +153,13 @@ export default {
         }
     },
     computed: {
-         ...mapGetters(["editUser"])
+         ...mapGetters(["editUserModal","userData","professionsData"])
     },
     methods: {
-        ...mapActions(["closeUserEditModal"])
+        ...mapActions(["closeUserEditModal","fetchProfessions"])
+    },
+    created() {
+        this.fetchProfessions();
     },
 
 }

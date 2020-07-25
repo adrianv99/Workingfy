@@ -1,6 +1,6 @@
 <template>
     <div>
-          
+        
         <Navbar tipoDeOpciones="userOptions" />
 
         <Snackbar :snackbar="snackbarData" />
@@ -13,7 +13,7 @@
 
         <!-- formulario para terminar el proyecto (calificar, pagar...)-->
         <EndingModal /> 
-        
+
         <v-container class="my-5">
             <v-layout wrap>
                 <v-flex md12 xs12>
@@ -24,7 +24,7 @@
             <v-layout wrap>
                 <v-flex md6 xs12>
 
-                    <UserProfile class="my-5"/>
+                    <UserProfile class="my-5" />
 
                 </v-flex>
                 <v-flex md5 offset-md-1 xs12>
@@ -55,6 +55,9 @@ import ProjectsCard from '@/components/ProjectsCard.vue'
 import CreateProject from '@/components/CreateProject.vue'
 import EndingModal from '@/components/EndingModal.vue'
 import UserEditModal from '@/components/UserEditModal.vue'
+import axios from 'axios';
+import { mapActions, mapGetters } from 'vuex'
+
 
 export default {
     components:{
@@ -79,9 +82,17 @@ export default {
             this.$router.push('/')
         }
     },
-    created() {
-        
+    methods: {
+        ...mapActions(["fetchUser"])
     },
+    computed: {
+        ...mapGetters(["userData"])
+    },
+    async created() {
+        let token = this.$session.get('jwt')
+        this.fetchUser(token);
+    }
+
     
 }
 </script>

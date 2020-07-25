@@ -11,7 +11,7 @@
 
             <v-card-text>        
                 <v-container>
-                    <v-row>
+                    <v-row v-if="!userData.id_profesion">
                         <v-col cols="12" md="12">
                             <v-btn 
                             md 
@@ -46,7 +46,7 @@
 
 <script>
 import Project from '@/components/Project.vue'
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'ProjectsCard',
@@ -60,6 +60,9 @@ export default {
     },
     methods: {
         ...mapActions(["openCreateProjectModal"])
+    },
+    computed: {
+        ...mapGetters(["userData"])
     },
 }
 </script>

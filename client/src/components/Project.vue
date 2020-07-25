@@ -33,7 +33,7 @@
 
             <v-card-actions>
                 <v-btn 
-                v-if="estado === 'iniciado'"
+                v-if="estado === 'iniciado' && !userData.id_profesion"
                 color="info" 
                 text
                 @click="showInteresados = !showInteresados" 
@@ -81,10 +81,14 @@
                         <tbody>
                             <tr v-for="freelancer in interesados" :key="freelancer.id">
                                 <td>
-                                    {{ freelancer.nombre }} {{ freelancer.apellido }}
+                                    <v-btn text small depressed> 
+                                        {{ freelancer.nombre }} {{ freelancer.apellido }} 
+                                    </v-btn>
                                 </td>
                                 <td> 
-                                    <v-btn color="info" small depressed> contratar </v-btn>
+                                    <v-btn color="info" small depressed> 
+                                        contratar 
+                                    </v-btn>
                                 </td>
                             </tr>
                         </tbody>
@@ -98,7 +102,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'Project',
@@ -110,7 +114,7 @@ export default {
             apellido: 'Lopez',
             ubicacion: 'La Vega, La loteria',
             fecha: '20/07/2020',
-            estado: 'en curso',
+            estado: 'iniciado',
             
 
             showDetalle: false,
@@ -127,6 +131,9 @@ export default {
     },
     methods: {
         ...mapActions(["openEndingModal"])
+    },
+    computed: {
+        ...mapGetters(["userData"])
     },
 }
 </script>

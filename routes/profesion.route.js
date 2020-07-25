@@ -1,9 +1,12 @@
 const express = require('express');
 const router = express.Router();
 
-const { consultar } = require('../controllers/profesion.controller');
+const profesion = require('../models/profesion');
 
-router.get('/consultarProfesion', consultar );
+router.get('/consultarProfesion', async (req, res) => {
+    const result = await profesion.consultar();
+    res.json(result);
+});
 
 module.exports = router;
 

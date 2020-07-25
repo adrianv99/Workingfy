@@ -14,7 +14,7 @@
                 <v-layout wrap="">
                     <v-flex md12 xs12>
 
-                        <h2 class="font-italic">
+                        <h3 class="font-italic">
                             Registrate para: 
                             <v-btn-toggle class="mx-3">
                                 <v-btn color="primary" text @click="tipoDeCuenta = 'freelancer'" >
@@ -24,7 +24,7 @@
                                     Buscar freelancer
                                 </v-btn>
                             </v-btn-toggle>
-                        </h2>
+                        </h3>
 
                         <!-- Formulario de registro ------------------------->
                         <v-form 
@@ -155,7 +155,7 @@
 
                             <v-btn 
                             class="my-5 mr-5"  
-                            x-large 
+                            large 
                             outlined
                             to="/login"
                             color="primary"
@@ -167,7 +167,7 @@
                             class="my-5" 
                             :loading="loading" 
                             :disabled="!validar"  
-                            x-large 
+                            large 
                             color="primary"
                             type="submmit"
                             >
@@ -211,7 +211,7 @@ export default {
 
             // datos de control
             loading: false,
-            tipoDeCuenta: null,
+            tipoDeCuenta: 'cliente',
             profesiones: [],
             validar: true,
             lazy: false,
@@ -254,6 +254,7 @@ export default {
             console.log(error);
             this.snackbarData = { active: true, text: 'Error al cargar listado de profesiones, vuelva luego...', color: 'error', icon: 'error'};
         }
+
     },
     methods: {
         async guardarDatos() {
@@ -313,7 +314,7 @@ export default {
 }
 
 .margin-extra{
-    margin-top: 150px;
+    margin-top: 100px;
     margin-bottom: 300px;
 }
 </style>

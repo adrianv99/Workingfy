@@ -12,9 +12,8 @@ app.use(express.json())
 
 //routes
 app.use('/api', require('./routes/profesion.route.js'));
-app.use('/api', require('./routes/freelancer.route.js'));
-app.use('/api', require('./routes/cliente.route.js'));
 app.use('/api', require('./routes/login.route.js'));
+app.use('/api', require('./routes/user.route.js'));
 
 
 //Inicio del servidor

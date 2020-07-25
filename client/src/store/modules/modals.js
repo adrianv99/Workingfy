@@ -5,7 +5,7 @@ const state = {
 };
 
 const getters = {
-    editUser: state => state.editUser,
+    editUserModal: state => state.editUser,
     createProject: state => state.createProject,
     ending: state => state.ending
 };

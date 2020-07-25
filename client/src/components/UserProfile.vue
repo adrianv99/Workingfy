@@ -14,29 +14,29 @@
                     <v-row>
                         <v-col cols="12" md="4">
                             <h4>
-                                Nombre: <span class="primary--text">{{ nombre }}</span>
+                                Nombre: <span class="primary--text">{{ userData.nombre }}</span>
                             </h4>
                         </v-col>
                         <v-col cols="12" md="4">
                             <h4>
-                                Apellido: <span class="primary--text">{{ apellido }}</span>
+                                Apellido: <span class="primary--text">{{ userData.apellido }}</span>
                             </h4>
                         </v-col>
                         <v-col cols="12" md="4">
                             <h4>
-                                Teléfono: <span class="primary--text">{{ telefono }}</span>
+                                Teléfono: <span class="primary--text">{{ userData.telefono }}</span>
                             </h4>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" md="4">
                             <h4>
-                                Correo: <span class="primary--text">{{ correo }}</span>
+                                Correo: <span class="primary--text">{{ userData.correo }}</span>
                             </h4>
                         </v-col>
                         <v-col cols="12" md="4">
                             <h4>
-                                Direccion: <span class="primary--text">{{ direccion }}</span>
+                                Direccion: <span class="primary--text">{{ userData.direccion }}</span>
                             </h4>
                         </v-col>
                     </v-row>
@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 
 export default {
     name: 'UserProfile',
@@ -73,6 +73,9 @@ export default {
     },
     methods: {
         ...mapActions(["openUserEditModal"])
+    },
+    computed: {
+        ...mapGetters(["userData"])
     },
 }
 </script>

@@ -10,47 +10,44 @@
         <!-- imagen de fondo -->
 
         <v-container class="margin-extra">
-            <v-card class="pa-12" min-height="500" shaped>
-                <v-layout wrap="">
-
-                    <v-flex md4 xs12>
-                        <img :src="img" width="100%" contain class="mt-12">
-                        <p class="my-5">
-                            ¿No tienes cuenta? 
-                            <v-btn text color="info" to="/registrate">Registrate</v-btn>
-                        </p>
-                    </v-flex>
-
-                    <v-flex md6 offset-md-1 xs12 class="text-center">
+            <v-layout wrap="">
+                <v-flex md8 offset-md-2 xs12 class="text-center">
+                    <v-card class="pa-12" min-height="400">
                         <!-- Formulario de login -->
-                        <v-form>
+                        <v-form @submit.prevent="Login()">
                             <h1 class="font-weight-bold mb-10">Inicio de sesión</h1>
 
                             <v-text-field
-                             v-model="correo" 
-                             type="e-mail"  
-                             label="Correo electronico" 
-                             class="my-1"
-                             outlined 
+                                v-model="correo" 
+                                type="e-mail"  
+                                label="Correo electronico" 
+                                class="my-1"
+                                outlined 
                             ></v-text-field>
 
                             <v-text-field 
-                             v-model="contrasena"
-                             type="password" 
-                             label="Contraseña" 
-                             class="my-1" 
-                             outlined ></v-text-field>
+                                v-model="contrasena" 
+                                label="Contraseña" 
+                                class="my-1"
+                                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+                                :type="showPass ? 'text' : 'password'"
+                                @click:append="showPass = !showPass" 
+                                outlined ></v-text-field>
 
-                            <v-btn class="my-5" :loading="loading" @click="Login() "  x-large block color="primary">
+                            <v-btn class="my-5" :loading="loading" type="submit"  x-large block color="primary">
                                 Acceder
                             </v-btn>
 
+                            <p class="mt-5">
+                                ¿No tienes cuenta? 
+                                <v-btn text color="info" to="/registrate">Registrate</v-btn>
+                            </p>
+
                         </v-form>
                         <!-- Formulario de login -->
-                    </v-flex>
-
-                </v-layout>
-            </v-card>
+                    </v-card>
+                </v-flex>
+            </v-layout>
         </v-container>
 
     </div>
@@ -62,7 +59,7 @@ import Vue from 'vue';
 import Navbar from '@/components/Navbar.vue'
 import Snackbar from '@/components/Snackbar.vue'
 import axios from 'axios'
-import store from '../../store/index'
+//import store from '../../store/index'
 
 export default {
     name: 'Login',
@@ -70,16 +67,14 @@ export default {
         Navbar,
         Snackbar
     },
-
-
-
-
     data() {
         return {
-            img: require('@/assets/SprintingDoodle.png'),
             correo: 'ssss@gmail.com',
             contrasena: 'samuelperezvaldez',
+
+            img: require('@/assets/SprintingDoodle.png'),
             loading: false,
+            showPass: false,
             snackbarData: { active: false, text: '', color: 'error', icon: 'error'}
         }
     },
@@ -92,16 +87,15 @@ export default {
             };
 
             try {
-                 //Envia los datos al servidor 
+                //Envia los datos al servidor 
                 const res = await axios.post('/api/login', datosDeUsuario);
+
                 if(res.data.message === 'success' && 'token' in res.data){
                     this.$session.start()
                     this.$session.set('jwt', res.data.token)
-                    //Vue.http.headers.common['Authorization'] = 'Bearer ' + res.data.token
-                    console.log(this.$session.getAll())
-                    this.$router.push('/explorar')
+                    
+                    this.$router.push('/panel')
                 } else {
-                    console.log('failed');
                     this.snackbarData = { active: true, text: 'Datos incorrectos', color: 'error', icon: 'error'}
                     this.loading = false;
                 }
@@ -126,8 +120,7 @@ export default {
 }
 
 .margin-extra{
-    margin-top: 150px;
-    margin-bottom: 300px;
+    margin-top: 100px;
+    margin-bottom: 100px;
 }
-
 </style>
