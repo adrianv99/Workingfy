@@ -4,7 +4,7 @@
         <Navbar tipoDeOpciones="userOptions" />
 
         <!-- componente que mostrara breve info del usuario (su perfil) -->
-        <!--<UserPreviewModal />  -->
+        <UserPreviewModal />
 
         <v-container class="my-5">
 

@@ -3,18 +3,26 @@
     <v-card class="pa-5" max-width="800" rounded raised>
         
         <v-card-subtitle>
-            <h3>
-                <div> Miguel Vinas</div>
-                20/29/2020 <v-icon> mdi-table-clock </v-icon>
+            <h3 class="secondary--text">
+                <v-btn 
+                text 
+                class="subtitle-2 secondary--text"
+                @click="openUserPreviewModal({ token:$session.get('jwt'), id: id, tipo:'Cliente' })"
+                >  
+                    Luis Torres 
+                </v-btn>
+                <div class="ml-4 subtitle-2">
+                    20/29/2020 <v-icon class="secondary--text"> mdi-table-clock </v-icon>
+                </div>
             </h3>
         </v-card-subtitle>
 
-        <v-card-title class="my-1 display-1">
+        <v-card-title class="my-2 display-1 font-weight-medium">
             Arreglar un inodoro
         </v-card-title>
 
         <v-card-subtitle >
-           <h3> 
+           <h3 class="secondary--text"> 
                <v-icon> mdi-map-marker </v-icon> 
                La Vega, La concepcion de la vega, gamundi
            </h3> 
@@ -63,12 +71,22 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex'
+
 export default {
     name: 'Post',
     data() {
         return {
-            show: false
+            show: false,
+            //pre-eliminar
+            id: 1,
         }
+    },
+    methods: {
+        ...mapActions(["openUserPreviewModal"])
+    },
+    computed: {
+        ...mapGetters(["userProfileModal","userProfile"])
     },
 }
 </script>

@@ -1,42 +1,44 @@
 <template>
   <v-row justify="center" align="center">
     
-    <v-dialog v-model="modal" width="800">
+    <v-dialog width="800" v-model="userProfileModal" @click:outside="closeUserPreviewModal">
       <v-card class="mx-auto pa-5" >
 
         <v-card-title class="display-1 my-3">
-            Manuel Torres
+            {{ userProfile.nombre }} {{ userProfile.apellido }}
         </v-card-title>
 
         <v-card-text>
 
-            <v-rating
-                :value="4.5"
-                color="amber"
-                dense
-                half-increments
-                readonly
-                size="24"
-            ></v-rating>
-            <div class="grey--text ml-1">4.5 (413)</div>
-            
+            <div v-if="userProfile.rating">
+              <v-rating
+                  :value="userProfile.rating.promedio"
+                  color="info"
+                  dense
+                  half-increments
+                  readonly
+                  size="24"
+              ></v-rating>
+              <div class="grey--text ml-1">{{ userProfile.rating.promedio }} ({{ userProfile.rating.totalEstrellas }})</div>
+            </div>
+
             <h2 class="my-6">
               <v-icon> mail </v-icon> Correo: 
-              <span class="primary--text">manueltorres@gmail.com</span>
+              <span class="primary--text">{{ userProfile.correo }}</span>
             </h2>
 
             <v-divider></v-divider>
             
             <h2 class="my-6">
               <v-icon> phone </v-icon>  Teléfono: 
-              <span class="primary--text">8093458750</span>
+              <span class="primary--text">{{ userProfile.telefono }}</span>
             </h2>
 
-            <v-divider></v-divider>
+            <v-divider v-if="userProfile.profesion"></v-divider>
 
-            <h2 class="my-6">
+            <h2 class="my-6" v-if="userProfile.profesion">
                <v-icon> mdi-account-tie </v-icon> Profesión: 
-               <span class="primary--text">Carpintero</span>
+               <span class="primary--text">{{ userProfile.profesion }}</span>
             </h2>
 
             <v-divider></v-divider>
@@ -62,13 +64,21 @@
 </template>
 
 <script>
+import { mapActions, mapGetters } from 'vuex';
+
 export default {
     name: 'UserPreviewModal',
     data(){
         return {
             modal: true
         }
-    }
+    },
+    methods: {
+        ...mapActions(["closeUserPreviewModal"])
+    },
+    computed: {
+        ...mapGetters(["userProfileModal","userProfile"])
+    },
 
 }
 </script>

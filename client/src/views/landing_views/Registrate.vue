@@ -17,10 +17,10 @@
                         <h3 class="font-italic">
                             Registrate para: 
                             <v-btn-toggle class="mx-3">
-                                <v-btn color="primary" text @click="tipoDeCuenta = 'freelancer'" >
+                                <v-btn color="primary" text @click="tipoDeCuenta = 'Freelancer'" >
                                     Buscar trabajo 
                                 </v-btn>
-                                <v-btn color="primary" text @click="tipoDeCuenta = 'cliente'" >
+                                <v-btn color="primary" text @click="tipoDeCuenta = 'Cliente'" >
                                     Buscar freelancer
                                 </v-btn>
                             </v-btn-toggle>
@@ -139,7 +139,7 @@
                                     ></v-text-field>
                                 </v-flex>
 
-                                <v-flex v-if="tipoDeCuenta === 'freelancer'" md5 offset-md-1 xs12>
+                                <v-flex v-if="tipoDeCuenta === 'Freelancer'" md5 offset-md-1 xs12>
                                     <v-select
                                     :items="profesiones"
                                     v-model="profesion"
@@ -156,7 +156,7 @@
                             <v-btn 
                             class="my-5 mr-5"  
                             large 
-                            outlined
+                            text
                             to="/login"
                             color="primary"
                             >
@@ -211,7 +211,7 @@ export default {
 
             // datos de control
             loading: false,
-            tipoDeCuenta: 'cliente',
+            tipoDeCuenta: 'Cliente',
             profesiones: [],
             validar: true,
             lazy: false,
@@ -242,8 +242,6 @@ export default {
 
         }
     },
-
-    
     async created() {
         // llenanddo el select-input con las profesiones cuando se crea la vista
         // para que el usuario pueda elegir su profesion a desempeñar 
@@ -271,21 +269,11 @@ export default {
                 id_profesion: this.profesion,
                 estado: 'A'
             };
-
-            //verifica que tipo de cuenta se creara el usuario e implementar la ruta correcta
-            var route = '';
-            if(this.tipoDeCuenta === 'cliente'){
-                route = 'insertarCliente';
-                //eleminando la propiedad id_profesion, ya que no se utiliza en la tabla cliente
-                delete datosDeUsuario.id_profesion; 
-            } else {
-                route = 'insertarFreelancer';
-            }
             
             //Envia los datos al servidor para ser insertados
             // y verifica el mensaje que devolvio el servidor
             try {
-                const res = await axios.post(`/api/${route}`, datosDeUsuario);
+                const res = await axios.post(`/api/insertar${this.tipoDeCuenta}`, datosDeUsuario);
                 if(res.data.message === 'success'){
                     this.$router.push('/login');
                 }

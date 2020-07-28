@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+//funcion que autentifica al usuario mediante el token que posee
 async function verificarToken(req, res, next) {
 
     const token = req.headers['x-access-token'];
@@ -8,12 +9,12 @@ async function verificarToken(req, res, next) {
     }
     
     //descodifica el token  recibido y saca el id
-    //guarda el id en el objeto request (req.userId), luego sigue con la otra funcion
+    //guarda el id y roll en el objeto request, luego sigue con la otra funcion
     const decoded = await jwt.verify(token, 'oK15w9nX');
     req.userId = decoded.id;
     req.roll = decoded.roll;
-    console.log(req.roll);
-    console.log(req.userId);
+    
+    console.log(`Acceso al ${decoded.roll} ${decoded.id}`);
     next();
 
 }

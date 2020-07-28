@@ -13,6 +13,16 @@ profesion.consultar = async () => {
     }
 };
 
+profesion.consultarPorId = async (id) => {
+    try{
+        const profesion = await pool.query(`SELECT * FROM profesion WHERE id=${id}`);
+        return profesion;
+    }catch(error){
+        console.log(error);
+        return 'Error en los servicios de bd';
+    }
+};
+
 
 
 module.exports = profesion;

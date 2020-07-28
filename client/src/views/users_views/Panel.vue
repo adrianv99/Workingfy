@@ -12,7 +12,10 @@
         <CreateProject /> 
 
         <!-- formulario para terminar el proyecto (calificar, pagar...)-->
-        <EndingModal /> 
+        <EndingModal />
+
+        
+        <UserPreviewModal /> 
 
         <v-container class="my-5">
             <v-layout wrap>

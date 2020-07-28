@@ -5,7 +5,7 @@
             <v-card-title>
                 <span class="font-weight-bold">{{ asunto }}</span>
             </v-card-title>
-
+            
             <v-card-text>        
                 <v-container fluid>
                     <v-row>
@@ -78,20 +78,25 @@
                     <v-divider></v-divider>
                     <v-simple-table fixed-header height="240px" class="primary">
                         <template v-slot:default>
-                        <tbody>
-                            <tr v-for="freelancer in interesados" :key="freelancer.id">
-                                <td>
-                                    <v-btn text small depressed> 
-                                        {{ freelancer.nombre }} {{ freelancer.apellido }} 
-                                    </v-btn>
-                                </td>
-                                <td> 
-                                    <v-btn color="info" small depressed> 
-                                        contratar 
-                                    </v-btn>
-                                </td>
-                            </tr>
-                        </tbody>
+                            <tbody>
+                                <tr v-for="freelancer in interesados" :key="freelancer.id">
+                                    <td>
+                                        <v-btn 
+                                        text 
+                                        small 
+                                        depressed 
+                                        @click="openUserPreviewModal({ token:$session.get('jwt'), id:freelancer.id, tipo:'Freelancer' })"
+                                        > 
+                                            {{ freelancer.nombre }} {{ freelancer.apellido }} 
+                                        </v-btn>
+                                    </td>
+                                    <td> 
+                                        <v-btn color="info" small depressed> 
+                                            contratar 
+                                        </v-btn>
+                                    </td>
+                                </tr>
+                            </tbody>
                         </template>
                     </v-simple-table>
                 </div>
@@ -130,7 +135,7 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["openEndingModal"])
+        ...mapActions(["openEndingModal","openUserPreviewModal"])
     },
     computed: {
         ...mapGetters(["userData"])
