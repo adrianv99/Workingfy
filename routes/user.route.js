@@ -54,7 +54,7 @@ router.post('/editarUsuario', verificarToken, async (req, res) => {
             correoNuevo = true;
         }
         
-        const result = await Freelancer.editar(req.body);
+        const result = await Freelancer.editar(req.body, correoNuevo);
         res.json({ message: result});
 
     }

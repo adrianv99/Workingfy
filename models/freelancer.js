@@ -1,6 +1,8 @@
 const pool = require('../db_connection');
 const encode = require('nodejs-base64-encode');
 
+const verificarCorreo = require('../controllers/verficarCorreo.controller');
+
 const freelancer = {};
 
 
@@ -67,25 +69,10 @@ freelancer.editar = async (datos, correoNuevo) => {
 
 freelancer.insertar = async (datos) => {
     try{
-        //realizamos una  consulta para ver si el correo que envio el usuario esta en uso o no,
-       //comprobando en la tabla freelancer
-        var correos = await pool.query('SELECT correo FROM freelancer');
-        var enUso = false;
-        correos.forEach( (x) => {
-            if(x.correo === datos.correo){
-                enUso = true;
-            }
-        });
-        //comprobando en la tabla cliente
-        correos = await pool.query('SELECT correo FROM cliente');
-        correos.forEach( (x) => {
-            if(x.correo === datos.correo){
-                enUso = true;
-            }
-        });
-       
 
-        //si el correo no esta en uso, se inserta, sino el servidor responde con un mensaje de que ya esta en uso
+        var enUso = await verificarCorreo(datos.correo);
+        //si el correo no esta en uso, se inserta, 
+        //sino el servidor responde con un mensaje de que ya esta en uso
         if(!enUso){
             datos.contrasena= encode.encode(""+datos.contrasena+"", 'base64')
             await pool.query('INSERT INTO freelancer set ?', datos);

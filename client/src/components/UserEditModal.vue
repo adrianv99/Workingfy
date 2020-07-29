@@ -111,6 +111,7 @@
                         class="pa-5" 
                         type="submit"
                         :loading="loading"
+                        :disabled="!validar"
                         >
                             guardar
                         </v-btn>

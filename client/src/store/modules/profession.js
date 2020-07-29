@@ -9,7 +9,7 @@ const getters = {
 };
 
 const actions = {
-    //funcion que obtiene los datos del usuario loggeado
+    //funcion que obtiene las profesiones
     async fetchProfessions({ commit }){
         let res = await axios.get('/api/consultarProfesion');
         commit('setProfessions', res.data);
