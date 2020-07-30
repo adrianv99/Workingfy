@@ -46,6 +46,7 @@
                                 <v-row v-if="filterOption === 'fecha'" >
                                     <v-col cols="12" md="4">
                                         <v-text-field
+                                        v-model="fechaInicio"
                                         type="date"  
                                         label="Desde..." 
                                         outlined 
@@ -53,6 +54,7 @@
                                     </v-col>
                                     <v-col cols="12" md="4">
                                         <v-text-field
+                                        v-model="fechaFin"
                                         type="date"  
                                         label="Hasta..." 
                                         outlined 
@@ -89,6 +91,7 @@
                                         <v-select
                                         label="Profesión"
                                         outlined
+                                        v-model="professionsData.id"
                                         :items="professionsData"
                                         item-text="nombre"
                                         item-value="id"
@@ -114,28 +117,29 @@
             </v-layout>
             <!-- Seccion de filtro -->
 
-            <v-layout wrap >
-                <v-flex md8>
-            
-                    <FreelancerCard 
-                    class="my-10" 
-                    v-if="!userData.id_profesion"  
-                    />
+            <!-- perfiles de freelancer, si el usuario es cliente -->
+            <div  v-if="!userData.id_profesion">
+                <v-layout wrap v-for="freelancer in freelancersData" :key="freelancer.id">
+                    <v-flex md8>
+                    
+                        <FreelancerCard class="my-10" :freelancerData="freelancer"  />
 
-                </v-flex>
-            </v-layout>
-            
-            <v-layout v-for="proyecto in projectsData" :key="proyecto.id" wrap >
-                <v-flex md8>
-            
-                    <Post 
-                    class="my-10" 
-                    v-if="userData.id_profesion"
-                    :postData="proyecto" 
-                    /> 
+                    </v-flex>
+                </v-layout>
+            </div>
+            <!-- perfiles de freelancer, si el usuario es cliente -->
 
-                </v-flex>
-            </v-layout>
+            <!-- publicaciones, si el usuario es freelancer -->
+            <div  v-if="userData.id_profesion">
+                <v-layout v-for="(proyecto, index) in projectsData" :key="index++" wrap >
+                    <v-flex md8>
+                
+                        <Post class="my-10" :postData="proyecto" /> 
+
+                    </v-flex>
+                </v-layout>
+            </div>
+            <!-- publicaciones, si el usuario es freelancer -->
 
         </v-container>
     </div>
@@ -158,6 +162,9 @@ export default {
     },
     data(){
         return {
+            fechaInicio: null,
+            fechaFin: null,
+
             filterOption: '',
             loading: false
         }
@@ -170,40 +177,69 @@ export default {
     },
     methods: {
         ...mapActions(["fetchUser","fetchProfessions","filterProjects",
-        "fetchCountries","fetchCitiesByCotuntry"]),
+        "fetchCountries","fetchCitiesByCotuntry","filterFreelancers"]),
 
         async filtrar() {
-            //verificamos si la funcion de filtrar la utilizara un usuario cliente o uno freelancer
-            //para asi decidir que cosa filtrar: proyectos o freelancers
-            if(!this.userData.id_profesion){
-                //completar aqui 
+            this.loading = true;
+            let params = {
+                token: this.$session.get('jwt'),
+                filterBy: this.filterOption,
             }
-            else{
-                //completar aqui
-                let params = {
-                    token: this.$session.get('jwt'),
-                    filterBy: this.filterOption
+
+            if(this.filterOption === 'ubicacion' && this.citiesData.id) {
+                params.id_ciudad = this.citiesData.id;
+                this.filterProjects(params);
+            }
+            else if(this.filterOption === 'fecha' && this.fechaInicio && this.fechaFin) {
+                params.fechaInicio = this.fechaInicio;
+                params.fechaFin = this.fechaFin;
+                this.filterProjects(params);
+            }
+            else if(this.filterOption === 'profesion' && this.professionsData.id){
+                params.id_profesion = this.professionsData.id;
+                //verificar si el usuario es cliente o freelancer
+                //para decidir se se va filtrar proyectos o freelancers 
+                if(!this.userData.id_profesion) {
+                    this.filterFreelancers(params);
                 }
-                this.filterProjects(params)
+                else{
+                    this.filterProjects(params);
+                }
             }
+
+            this.loading = false;
+            
         }
         
     },
     computed: {
         ...mapGetters(["userData","professionsData","projectsData",
-        "countriesData","citiesData"])
+        "countriesData","citiesData","freelancersData"])
     },
     async created() {
-        let token = this.$session.get('jwt');
-        this.fetchUser(token);
+        //obteniendo datos del usuario loggeado
+        this.fetchUser(this.$session.get('jwt'));
 
+        //obteniendo paises, para filtrar por ubicacion
+        this.fetchCountries();
+
+        //obteniendo profesiones, para filtrar por profesion
+        this.fetchProfessions();
+        
         let params = {
             token: this.$session.get('jwt'),
             filterBy: ''
         }
-        this.filterProjects(params);
-
-        this.fetchCountries();
+        //verificamos si el usuario es cliente o freelancer
+        //asi decidir si traer publicaciones de proyectos o perfiles de freelancers
+        if(this.userData.id_profesion) {
+            //obteniendo publicaciones de proyectos
+            this.filterProjects(params);
+        }
+        else {
+            //obteniendo perfiles de freelancers
+            this.filterFreelancers(params);
+        }
     },
 }
 </script>

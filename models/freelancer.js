@@ -5,6 +5,34 @@ const verificarCorreo = require('../controllers/verficarCorreo.controller');
 
 const freelancer = {};
 
+freelancer.consultar = async () => {
+    try {
+        const freelancers = await pool.query(`SELECT freelancer.id AS id, freelancer.nombre AS nombre, freelancer.apellido AS apellido,
+        freelancer.correo AS correo, freelancer.telefono AS telefono, freelancer.direccion AS direccion, profesion.nombre AS profesion
+        FROM freelancer
+        INNER JOIN profesion ON freelancer.id_profesion = profesion.id`);
+
+        return freelancers;
+    } catch (error) {
+        console.log(error);
+        return 'Error en los servicios de bd';
+    }
+};
+
+freelancer.consultarPorProfesion = async (id_profesion) => {
+    try {
+        const freelancers = await pool.query(`SELECT freelancer.id AS id, freelancer.nombre AS nombre, freelancer.apellido AS apellido,
+        freelancer.correo AS correo, freelancer.telefono AS telefono, freelancer.direccion AS direccion, profesion.nombre AS profesion
+        FROM freelancer
+        INNER JOIN profesion ON freelancer.id_profesion = profesion.id
+        WHERE freelancer.id_profesion=${id_profesion}`);
+
+        return freelancers;
+    } catch (error) {
+        console.log(error);
+        return 'Error en los servicios de bd';
+    }
+};
 
 freelancer.consultarPorId = async (id) => {
     try{

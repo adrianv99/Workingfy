@@ -3,19 +3,19 @@
       <v-card class="pa-5" rounded raised max-width="800">
 
         <v-card-title class="display-1 my-1">
-            {{ nombre }}  {{ apellido }}
+            {{ freelancerData.nombre }}  {{ freelancerData.apellido }}
         </v-card-title>
         <v-card-subtitle class="mb-3">
            <h3> 
                <v-icon> mdi-map-marker </v-icon> 
-               {{ direccion }}
+               {{ freelancerData.direccion }}
            </h3> 
         </v-card-subtitle>
 
         <v-card-text>
 
             <v-rating
-                :value="estrellasProm"
+                :value="freelancerData.rating.promedio"
                 color="info"
                 dense
                 half-increments
@@ -23,8 +23,8 @@
                 size="24"
             ></v-rating>
             <div class="grey--text ml-1">
-              {{ estrellasProm }} 
-              ({{ estrellasTotal}})
+              {{ freelancerData.rating.promedio }} 
+              ({{ freelancerData.rating.totalEstrellas }})
             </div>
             
            <v-container>
@@ -33,21 +33,21 @@
                <v-flex md5>
                   <h2 class="my-8">
                     <v-icon> mail </v-icon> Correo: 
-                    <span class="primary--text">{{ correo }}</span>
+                    <span class="primary--text">{{ freelancerData.correo }}</span>
                   </h2>
 
                   <v-divider></v-divider>
                   
                   <h2 class="my-8">
                     <v-icon> phone </v-icon>  Teléfono: 
-                    <span class="primary--text">{{ telefono }}</span>
+                    <span class="primary--text">{{ freelancerData.telefono }}</span>
                   </h2>
 
                   <v-divider></v-divider>
 
                   <h2 class="my-8">
                       <v-icon> mdi-account-tie </v-icon> Profesión: 
-                      <span class="primary--text">{{ profesion }}</span>
+                      <span class="primary--text">{{ freelancerData.profesion }}</span>
                   </h2>
 
                   <v-divider></v-divider>
@@ -102,6 +102,7 @@ export default {
         estrellasProm: 4.5,
         estrellasTotal: 345,
       }
-    }
+    },
+    props: ["freelancerData"]
 }
 </script>

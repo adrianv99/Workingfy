@@ -17,18 +17,21 @@
             </h3>
         </v-card-subtitle>
 
-        <v-card-title class="my-2 display-1 font-weight-medium">
+        <v-card-title class="my-3 display-1 font-weight-medium">
             {{ postData.asunto }}
         </v-card-title>
-
-        <v-card-subtitle >
-           <h3 class="secondary--text"> 
-               <v-icon> mdi-map-marker </v-icon> 
-               {{ postData.nombre_estado }}, {{ postData.nombre_pais }}
-           </h3> 
-        </v-card-subtitle>
-
-        <v-card-actions>
+    
+        <h4 class="secondary--text ml-3 my-1"> 
+            <v-icon> mdi-map-marker </v-icon> 
+            {{ postData.nombre_estado }}, {{ postData.nombre_pais }}
+        </h4> 
+     
+        <h4 class="secondary--text ml-3 my-2"> 
+            <v-icon> mdi-account-tie </v-icon> 
+            Profesional requerido: {{ postData.profesion }}
+        </h4> 
+        
+        <v-card-actions class="mt-5">
             <v-container fluid>
                 <v-layout wrap>
 

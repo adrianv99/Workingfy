@@ -61,6 +61,30 @@ router.post('/editarUsuario', verificarToken, async (req, res) => {
     
 });
 
+router.post('/filtrarFreelancers', verificarToken, async (req, res) => {
+    //explorar cliente
+    if(req.body.filterBy === ''){
+        var freelancers = await Freelancer.consultar();
+
+        //agregando el rating a cada freelancer
+        for( x = 0; x < freelancers.length; x++){
+            freelancers[x].rating = await Freelancer.consultarRating(freelancers[x].id);
+        }
+
+        res.json(freelancers);
+    }
+    else if(req.body.filterBy === 'profesion'){
+        const freelancers = await Freelancer.consultarPorProfesion(req.body.id_profesion);
+
+        //agregando el rating a cada freelancer
+        for( x = 0; x < freelancers.length; x++){
+            freelancers[x].rating = await Freelancer.consultarRating(freelancers[x].id);
+        }
+       
+        res.json(freelancers);
+    }
+});
+
 router.post('/consultarFreelancerProfile', verificarToken, async (req, res) => {
     const freelancer = await Freelancer.consultarPorId(req.body.id);
     const rating = await Freelancer.consultarRating(req.body.id);

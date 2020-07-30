@@ -43,7 +43,19 @@ router.post('/filtrarProyecto', verificarToken, async (req, res) => {
         const proyectos = await Proyecto.consultar();
         res.json(proyectos);
     }
-    console.log(req.body.filterBy);
+    else if(req.body.filterBy === 'profesion'){
+        const proyectos = await Proyecto.consultarPorProfesion(req.body.id_profesion);
+        res.json(proyectos);
+    }
+    else if(req.body.filterBy === 'ubicacion'){
+        const proyectos = await Proyecto.consultarPorUbicacion(req.body.id_ciudad);
+        res.json(proyectos);
+    }
+    else if(req.body.filterBy === 'fecha'){
+        const proyectos = await Proyecto.consultarPorFecha(req.body.fechaInicio, req.body.fechaFin);
+        res.json(proyectos);
+    }
+    
 
 });
 
