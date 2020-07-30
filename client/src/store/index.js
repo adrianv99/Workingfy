@@ -5,6 +5,7 @@ import user from './modules/user';
 import profession from './modules/profession';
 import ubicacion from './modules/ubicacion';
 import modals from './modules/modals';
+import projects from './modules/project';
 
 Vue.use(VueSession, {persist: true})
 Vue.use(Vuex)
@@ -14,6 +15,7 @@ export default new Vuex.Store({
     user,
     profession,
     modals,
-    ubicacion
+    ubicacion,
+    projects
   }
 })

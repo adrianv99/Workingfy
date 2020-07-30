@@ -7,24 +7,24 @@
                 <v-btn 
                 text 
                 class="subtitle-2 secondary--text"
-                @click="openUserPreviewModal({ token:$session.get('jwt'), id: id, tipo:'Cliente' })"
+                @click="openUserPreviewModal({ token:$session.get('jwt'), id: postData.id, tipo:'Cliente' })"
                 >  
-                    Luis Torres 
+                    {{ postData.nombre_cliente}} {{ postData.apellido_cliente}} 
                 </v-btn>
                 <div class="ml-4 subtitle-2">
-                    20/29/2020 <v-icon class="secondary--text"> mdi-table-clock </v-icon>
+                    {{ postData.fecha.slice(0, 10) }} <v-icon class="secondary--text"> mdi-table-clock </v-icon>
                 </div>
             </h3>
         </v-card-subtitle>
 
         <v-card-title class="my-2 display-1 font-weight-medium">
-            Arreglar un inodoro
+            {{ postData.asunto }}
         </v-card-title>
 
         <v-card-subtitle >
            <h3 class="secondary--text"> 
                <v-icon> mdi-map-marker </v-icon> 
-               La Vega, La concepcion de la vega, gamundi
+               {{ postData.nombre_estado }}, {{ postData.nombre_pais }}
            </h3> 
         </v-card-subtitle>
 
@@ -60,7 +60,7 @@
 
                 <v-card-subtitle >
                     <h3>
-                            I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape.
+                        {{ postData.detalle }}
                     </h3> 
                 </v-card-subtitle>
 
@@ -79,7 +79,7 @@ export default {
         return {
             show: false,
             //pre-eliminar
-            id: 1,
+            //id: 1,
         }
     },
     methods: {
@@ -88,5 +88,6 @@ export default {
     computed: {
         ...mapGetters(["userProfileModal","userProfile"])
     },
+    props: ["postData"]
 }
 </script>

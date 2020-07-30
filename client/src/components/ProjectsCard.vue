@@ -17,25 +17,24 @@
                             md 
                             color="info" 
                             class="my-3" 
-                            @click="openCreateProjectModal"
+                            @click="openCreateProjectModal()"
                             > 
                                 Nuevo proyecto
                             </v-btn>
                         </v-col>
                     </v-row>
                     <v-row>
-                        <v-col cols="12" md="4" xs="12">
-                            <Project />
+            
+                        <v-col 
+                        v-for="project in projectsData" 
+                        :key="project.id"
+                        cols="12" 
+                        md="4" 
+                        xs="12"
+                        >
+                            <Project :projectData="project" />
                         </v-col>
-                        <v-col cols="12" md="4" xs="12">
-                            <Project />
-                        </v-col>
-                        <v-col cols="12" md="4" xs="12">
-                            <Project />
-                        </v-col>
-                        <v-col cols="12" md="4" xs="12">
-                            <Project />
-                        </v-col>
+
                     </v-row>
                 </v-container>
             </v-card-text> 
@@ -59,10 +58,13 @@ export default {
         }
     },
     methods: {
-        ...mapActions(["openCreateProjectModal"])
+        ...mapActions(["openCreateProjectModal","fetchProjects"])
     },
     computed: {
-        ...mapGetters(["userData"])
+        ...mapGetters(["userData","projectsData"])
+    },
+    created() {
+        this.fetchProjects(this.$session.get('jwt'));
     },
 }
 </script>

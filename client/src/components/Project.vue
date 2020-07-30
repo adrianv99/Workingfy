@@ -3,37 +3,40 @@
         <v-card dark="" color="primary">
 
             <v-card-title>
-                <span class="font-weight-bold">{{ asunto }}</span>
+                <span class="font-weight-bold">{{ projectData.asunto }}</span>
             </v-card-title>
             
-            <v-card-text>        
-                <v-container fluid>
-                    <v-row>
-                        <v-col>
-                            Trabajando con: <span class="info--text"> {{ nombre }} {{ apellido }} </span>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            Ubicacion: <span class="info--text"> {{ ubicacion }} </span>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            Fecha: <span class="info--text"> {{ fecha }} </span>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col>
-                            Estado: <span class="info--text"> {{ estado }} </span>
-                        </v-col>
-                    </v-row>
-                </v-container>
-            </v-card-text> 
-
+            <v-container fluid>
+                <v-row v-if="projectData.nombre_trabajador">
+                    <v-col>
+                        Trabajando con: <span class="info--text"> {{ projectData.nombre_trabajador }} {{ projectData.apellido_trabajador }} </span>
+                    </v-col>
+                </v-row>
+                <v-row v-else>
+                    <v-col>
+                        Trabajando con: <span class="info--text"> Ninguno </span>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        Ubicacion: <span class="info--text"> {{ projectData.nombre_estado }}, {{ projectData.nombre_pais }} </span>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        Fecha: <span class="info--text"> {{ projectData.fecha.slice(0, 10) }} </span>
+                    </v-col>
+                </v-row>
+                <v-row>
+                    <v-col>
+                        Estado: <span class="info--text"> {{ projectData.seguimiento }} </span>
+                    </v-col>
+                </v-row>
+            </v-container>
+           
             <v-card-actions>
                 <v-btn 
-                v-if="estado === 'iniciado' && !userData.id_profesion"
+                v-if="projectData.seguimiento === 'iniciado' && !userData.id_profesion"
                 color="info" 
                 text
                 @click="showInteresados = !showInteresados" 
@@ -45,7 +48,7 @@
                 <v-btn 
                 color="info" 
                 text 
-                v-if="estado === 'en curso'"
+                v-if="projectData.seguimiento === 'en curso'"
                 @click="openEndingModal"
                 >
                     finalizar
@@ -67,7 +70,7 @@
                     <v-divider></v-divider>
                     <v-card-subtitle >
                         <h3>
-                             {{ detalle }}
+                            {{ projectData.detalle }}
                         </h3> 
                     </v-card-subtitle>
                 </div>
@@ -118,8 +121,6 @@ export default {
             nombre: 'Juan',
             apellido: 'Lopez',
             ubicacion: 'La Vega, La loteria',
-            fecha: '20/07/2020',
-            estado: 'iniciado',
             
 
             showDetalle: false,
@@ -140,5 +141,6 @@ export default {
     computed: {
         ...mapGetters(["userData"])
     },
+    props: ["projectData"]
 }
 </script>

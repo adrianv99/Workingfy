@@ -269,6 +269,10 @@ export default {
                 id_profesion: this.profesion,
                 estado: 'A'
             };
+
+            if(this.tipoDeCuenta === 'Cliente') {
+                delete datosDeUsuario.id_profesion;
+            }
             
             //Envia los datos al servidor para ser insertados
             // y verifica el mensaje que devolvio el servidor
