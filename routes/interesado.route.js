@@ -22,4 +22,9 @@ router.get('/consultarInteresado', verificarToken, async (req, res) => {
     res.json(interesados);
 });
 
+router.post('/contratarInteresado', verificarToken, async (req, res) => {
+    const result = await Interesado.contratar(req.body.id_proyecto, req.body.id_freelancer);
+    res.json({ message: result});
+});
+
 module.exports = router;

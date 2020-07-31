@@ -23,9 +23,9 @@ cliente.consultarRating = async(id) => {
     try{
         const totalEstrellas = await pool.query(`SELECT rating FROM cliente WHERE id=${id}`);
         const totalProyectosEvaluados = await pool.query(`SELECT COUNT(rating_cliente) AS totalProyectosEvaluados FROM proyecto 
-        WHERE id_cliente=${id} AND rating_cliente='Evaluado'`);
+        WHERE id_cliente=${id} AND rating_cliente='calificado'`);
 
-        const promedio = 0;
+        let promedio = 0;
         // evitando una division 0/0
         if(totalProyectosEvaluados[0].totalProyectosEvaluados !== 0){
             promedio = totalEstrellas[0].rating / totalProyectosEvaluados[0].totalProyectosEvaluados;

@@ -5,6 +5,7 @@ const Proyecto = require('../models/proyecto');
 
 //controllers
 const verificarToken = require('../controllers/auth.controller');
+const proyecto = require('../models/proyecto');
 
 // ruta para creacion del proyecto
 router.post('/insertarProyecto', verificarToken, async (req, res) => {
@@ -14,6 +15,8 @@ router.post('/insertarProyecto', verificarToken, async (req, res) => {
     req.body.id_cliente = req.userId;
     req.body.seguimiento = 'iniciado';
     req.body.fecha = `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`;
+    req.body.rating_cliente = 'sin calificar';
+    req.body.rating_freelancer = 'sin calificar';
     req.body.estado = 'A';
 
     const result = await Proyecto.insertar(req.body);
@@ -59,6 +62,12 @@ router.post('/filtrarProyecto', verificarToken, async (req, res) => {
     }
     
 
+});
+
+//ruta para calificar proyecto
+router.post('/calificarProyecto', verificarToken, async (req, res) => {
+    const result = await Proyecto.calificar(req.body, req.roll);
+    res.json({ message: result });
 });
 
 module.exports = router;

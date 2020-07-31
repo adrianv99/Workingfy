@@ -17,6 +17,8 @@
             <v-rating
                 :value="freelancerData.rating.promedio"
                 color="info"
+                background-color="grey darken-1"
+                empty-icon="$ratingFull"
                 dense
                 half-increments
                 readonly

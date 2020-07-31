@@ -1,6 +1,8 @@
 const pool = require('../db_connection');
 
+//controllers
 const verificarInteresados = require('../controllers/verificarInteresados.controller');
+const verificarFinalizacion = require('../controllers/verificarFinalizacion.controller');
 
 const proyecto = {};
 
@@ -17,6 +19,44 @@ proyecto.insertar = async (datos) => {
     }
 };
 
+proyecto.calificar = async (datos, user_type) => {
+    try {
+        //si el usuario que desea calificar el trabajo es de tipo cliente,
+        // entonces le agregara estrellas al perfil del usuario freelancer que realizo el trabajo
+        if(user_type === 'Cliente') {
+            //obteniendo el total de estrellas anteriores
+            // y sumando las anteriores con las nuevas que le selecciono el cliente
+            const estrellasAnteriores = await pool.query(`SELECT rating FROM freelancer WHERE id=${datos.id_user}`);
+            let totalEstrellas = estrellasAnteriores[0].rating + datos.estrellas;
+        
+            await pool.query(`UPDATE freelancer SET rating=${totalEstrellas} WHERE id=${datos.id_user}`);
+            await pool.query(`UPDATE proyecto SET rating_freelancer='calificado' WHERE id=${datos.id_proyecto}`);
+
+        }
+
+        //si el usuario que desea calificar el trabajo es de tipo freelancer,
+        // entonces le agregara estrellas al perfil del usuario cliente con el que trabajo
+        if(user_type === 'Freelancer') {
+            //obteniendo el total de estrellas anteriores
+            // y sumando las anteriores con las nuevas que le selecciono el cliente
+            const estrellasAnteriores = await pool.query(`SELECT rating FROM cliente WHERE id=${datos.id_user}`);
+            let totalEstrellas = estrellasAnteriores[0].rating + datos.estrellas;
+        
+            await pool.query(`UPDATE cliente SET rating=${totalEstrellas} WHERE id=${datos.id_user}`);
+            await pool.query(`UPDATE proyecto SET rating_cliente='calificado' WHERE id=${datos.id_proyecto}`);
+
+        }
+
+        //funcion que finaliza el proyecto
+        await verificarFinalizacion(datos.id_proyecto);
+
+        return 'success'
+    } catch (error) {
+        console.log(error)
+        return 'Error en los servicios'
+    }
+}
+
 //consulta para el explorar del freelancer
 proyecto.consultar = async (id_freelancer) => {
     try {
@@ -30,7 +70,7 @@ proyecto.consultar = async (id_freelancer) => {
         INNER JOIN profesion ON proyecto.id_profesion = profesion.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.seguimiento='iniciado'`);
+        WHERE proyecto.seguimiento='iniciado' ORDER BY proyecto.id DESC`);
         
         //Filtramos los proyectos a proyectos que el freelancer
         //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
@@ -56,7 +96,7 @@ proyecto.consultarPorProfesion = async (profesion, id_freelancer) => {
         INNER JOIN profesion ON proyecto.id_profesion = profesion.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.id_profesion=${profesion} AND proyecto.seguimiento='iniciado'`);
+        WHERE proyecto.id_profesion=${profesion} AND proyecto.seguimiento='iniciado' ORDER BY proyecto.id DESC`);
 
         //Filtramos los proyectos a proyectos que el freelancer
         //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
@@ -82,7 +122,7 @@ proyecto.consultarPorUbicacion = async (ubicacion, id_freelancer) => {
         INNER JOIN profesion ON proyecto.id_profesion = profesion.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.ubicacion=${ubicacion} AND proyecto.seguimiento='iniciado'`);
+        WHERE proyecto.ubicacion=${ubicacion} AND proyecto.seguimiento='iniciado' ORDER BY proyecto.id DESC`);
 
         //Filtramos los proyectos a proyectos que el freelancer
         //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
@@ -108,7 +148,7 @@ proyecto.consultarPorFecha = async (inicio, fin, id_freelancer) => {
         INNER JOIN profesion ON proyecto.id_profesion = profesion.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.seguimiento='iniciado' AND proyecto.fecha>='${inicio}' AND proyecto.fecha<='${fin}'`);
+        WHERE proyecto.seguimiento='iniciado' AND proyecto.fecha>='${inicio}' AND proyecto.fecha<='${fin}' ORDER BY proyecto.id DESC`);
         
         //Filtramos los proyectos a proyectos que el freelancer
         //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
@@ -129,12 +169,12 @@ proyecto.consultarProyectoFreelancer = async (id) => {
         const proyectos = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
         proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento,
         proyecto.fecha AS fecha, estado.nombre AS nombre_estado, pais.nombre AS nombre_pais,
-        cliente.nombre AS nombre_trabajador, cliente.apellido AS apellido_trabajador
+        cliente.nombre AS nombre_trabajador, cliente.apellido AS apellido_trabajador, cliente.id AS id_trabajador
         FROM proyecto 
         INNER JOIN cliente ON proyecto.id_cliente = cliente.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.id_freelancer=${id} AND proyecto.seguimiento='en curso'`);
+        WHERE proyecto.id_freelancer=${id} AND proyecto.seguimiento='en curso' AND proyecto.rating_cliente<>'calificado'`);
 
         return proyectos;
 
@@ -160,12 +200,12 @@ proyecto.consultarProyectoCliente = async (id) => {
         const proyectosEnCurso = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
         proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento,
         proyecto.fecha AS fecha, estado.nombre AS nombre_estado, pais.nombre AS nombre_pais,
-        freelancer.nombre AS nombre_trabajador, freelancer.apellido AS apellido_trabajador
+        freelancer.nombre AS nombre_trabajador, freelancer.apellido AS apellido_trabajador, freelancer.id AS id_trabajador
         FROM proyecto 
         INNER JOIN freelancer ON proyecto.id_freelancer = freelancer.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
-        WHERE proyecto.id_cliente=${id} AND proyecto.seguimiento='en curso'`);
+        WHERE proyecto.id_cliente=${id} AND proyecto.seguimiento='en curso' AND proyecto.rating_freelancer<>'calificado' `);
         
         const proyectos = proyectosEnCurso.concat(proyectosIniciados);
 

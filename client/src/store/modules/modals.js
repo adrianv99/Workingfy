@@ -4,14 +4,16 @@ const state = {
     editUser: false,
     createProject: false,
     ending: false,
+    endingData: {}, 
     userPreviewModal: false, 
-    userProfile: {}
+    userProfile: {},
 };
 
 const getters = {
     editUserModal: state => state.editUser,
     createProject: state => state.createProject,
     ending: state => state.ending,
+    endingData: state => state.endingData,
     userProfileModal: state => state.userPreviewModal,
     userProfile: state => state.userProfile
 };
@@ -29,8 +31,11 @@ const actions = {
     closeCreateProjectModal({ commit }){
         commit('closeCreateProject');
     },
-    openEndingModal({ commit }){
+    openEndingModal({ commit }, params){
+
+        commit('setEndingData', params)
         commit('openEnding');
+        
     },
     closeEndingModal({ commit }){
         commit('closeEnding');
@@ -63,7 +68,8 @@ const mutations = {
     closeEnding: (state) => (state.ending = false),
     openUserProfile: (state) => (state.userPreviewModal = true),
     closeUserProfile: (state) => (state.userPreviewModal = false),
-    setUserProfile: (state, userData) => (state.userProfile = userData)
+    setUserProfile: (state, userData) => (state.userProfile = userData),
+    setEndingData: (state, endingData) => (state.endingData = endingData )
 };
 
 export default {

@@ -1,5 +1,8 @@
 <template>
     <div>
+
+        <Snackbar :snackbar="snackbarData" />
+
         <v-card dark="" color="primary">
 
             <v-card-title>
@@ -49,7 +52,14 @@
                 color="info" 
                 text 
                 v-if="projectData.seguimiento === 'en curso'"
-                @click="openEndingModal"
+                @click="openEndingModal(
+                    {
+                        asunto: projectData.asunto,
+                        user: `${projectData.nombre_trabajador} ${projectData.apellido_trabajador}`,
+                        id_user: projectData.id_trabajador,
+                        id_proyecto: projectData.id
+                    }
+                )"
                 >
                     finalizar
                 </v-btn>
@@ -94,7 +104,13 @@
                                         </v-btn>
                                     </td>
                                     <td> 
-                                        <v-btn color="info" small depressed> 
+                                        <v-btn 
+                                        color="info" 
+                                        small 
+                                        depressed
+                                        :loading="contractLoading"
+                                        @click="contratar({ id_proyecto: projectData.id ,id_freelancer: freelancer.id_freelancer})"
+                                        > 
                                             contratar 
                                         </v-btn>
                                     </td>
@@ -110,33 +126,61 @@
 </template>
 
 <script>
+import Snackbar from '@/components/Snackbar'
 import { mapActions, mapGetters } from 'vuex'
 import axios from 'axios'
 
 export default {
     name: 'Project',
+    components: {
+        Snackbar
+    },
     data() {
         return {
-            asunto: 'arreglar inodoro',
-            detalle: 'Im a thing. But, like most politicians, he promised more than he could deliver. You wont have time for sleeping, soldier, not with all the bed making youll be doing. Then well go with that data file! Hey, you add a one and two zeros to that or we walk! Youre going to do his laundry Ive got to find a way to escape.',
-            nombre: 'Juan',
-            apellido: 'Lopez',
-            ubicacion: 'La Vega, La loteria',
-            
-
             showDetalle: false,
             showInteresados: false,
+            contractLoading: false,
+            snackbarData: {},
 
             interesados: []
         }
     },
     methods: {
-        ...mapActions(["openEndingModal","openUserPreviewModal"])
+        ...mapActions(["openEndingModal","openUserPreviewModal","fetchProjects"]),
+        //funcion que para contratar un interesado
+        async contratar(params) {
+            this.contractLoading = true;
+            let config = {
+                headers: {
+                    "x-access-token": this.$session.get('jwt'),
+                }
+            }
+
+            try {
+                let res = await axios.post('/api/contratarInteresado', params, config);
+            
+                if(res.data.message === 'success') {
+                    this.contractLoading = false;
+                    this.showInteresados = false;
+                    this.snackbarData = { active: true, text: 'Freelancer contratado correctamente', color: 'success', icon: 'mdi-account-check'};
+                    this.fetchProjects(this.$session.get('jwt'));
+                }
+                else {
+                    this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
+                    this.contractLoading = false
+                }
+            } catch (error) {
+                console.log(error);
+                this.snackbarData = { active: true, text: 'Algo salio mal, intente mas tarde', color: 'error', icon: 'error'};
+            }
+
+        }
     },
     computed: {
         ...mapGetters(["userData"])
     },
     props: ["projectData"],
+    //cargar interesados del proyecto
     async created() {
         try {
             let config = {

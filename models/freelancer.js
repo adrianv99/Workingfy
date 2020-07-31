@@ -10,7 +10,7 @@ freelancer.consultar = async () => {
         const freelancers = await pool.query(`SELECT freelancer.id AS id, freelancer.nombre AS nombre, freelancer.apellido AS apellido,
         freelancer.correo AS correo, freelancer.telefono AS telefono, freelancer.direccion AS direccion, profesion.nombre AS profesion
         FROM freelancer
-        INNER JOIN profesion ON freelancer.id_profesion = profesion.id`);
+        INNER JOIN profesion ON freelancer.id_profesion = profesion.id ORDER BY freelancer.id DESC`);
 
         return freelancers;
     } catch (error) {
@@ -25,7 +25,7 @@ freelancer.consultarPorProfesion = async (id_profesion) => {
         freelancer.correo AS correo, freelancer.telefono AS telefono, freelancer.direccion AS direccion, profesion.nombre AS profesion
         FROM freelancer
         INNER JOIN profesion ON freelancer.id_profesion = profesion.id
-        WHERE freelancer.id_profesion=${id_profesion}`);
+        WHERE freelancer.id_profesion=${id_profesion} ORDER BY freelancer.id DESC`);
 
         return freelancers;
     } catch (error) {
@@ -50,9 +50,9 @@ freelancer.consultarRating = async(id) => {
     try{
         const totalEstrellas = await pool.query(`SELECT rating FROM freelancer WHERE id=${id}`);
         const totalProyectosEvaluados = await pool.query(`SELECT COUNT(rating_freelancer) AS totalProyectosEvaluados FROM proyecto 
-        WHERE id_freelancer=${id} AND rating_freelancer='Evaluado'`);
+        WHERE id_freelancer=${id} AND rating_freelancer='calificado'`);
 
-        const promedio = 0;
+        let promedio = 0;
         // evitando una division 0/0
         if(totalProyectosEvaluados[0].totalProyectosEvaluados !== 0){
             promedio = totalEstrellas[0].rating / totalProyectosEvaluados[0].totalProyectosEvaluados;

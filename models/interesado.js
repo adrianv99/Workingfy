@@ -28,5 +28,16 @@ interesado.consultar = async (id_proyecto) => {
     }
 }
 
+interesado.contratar = async (id_proyecto, id_freelancer) => {
+    try {
+        await pool.query(`UPDATE proyecto SET id_freelancer=${id_freelancer}, seguimiento='en curso' 
+        WHERE id=${id_proyecto}`);
+        return 'success'
+    } catch (error) {
+        console.log(error);
+        return 'error en los servicios db';
+    }
+}
+
 
 module.exports = interesado;
