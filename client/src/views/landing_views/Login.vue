@@ -69,8 +69,8 @@ export default {
     },
     data() {
         return {
-            correo: 'ssss@gmail.com',
-            contrasena: 'samuelperezvaldez',
+            correo: '@gmail.com',
+            contrasena: '12345678',
 
             img: require('@/assets/SprintingDoodle.png'),
             loading: false,

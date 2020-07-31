@@ -16,6 +16,7 @@ app.use('/api', require('./routes/login.route.js'));
 app.use('/api', require('./routes/user.route.js'));
 app.use('/api', require('./routes/ubicacion.route.js'));
 app.use('/api', require('./routes/proyecto.route.js'));
+app.use('/api', require('./routes/interesado.route.js'));
 
 
 //Inicio del servidor

@@ -42,7 +42,7 @@
                 @click="showInteresados = !showInteresados" 
                 >
                     interesados
-                    <v-icon>{{ showInteresados ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                    <v-icon v-if="interesados.length != 0">{{ showInteresados ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                 </v-btn>
 
                 <v-btn 
@@ -79,7 +79,7 @@
              <v-expand-transition>
                 <div v-show="showInteresados">
                     <v-divider></v-divider>
-                    <v-simple-table fixed-header height="240px" class="primary">
+                    <v-simple-table fixed-header :height="50 * interesados.length" class="primary">
                         <template v-slot:default>
                             <tbody>
                                 <tr v-for="freelancer in interesados" :key="freelancer.id">
@@ -88,9 +88,9 @@
                                         text 
                                         small 
                                         depressed 
-                                        @click="openUserPreviewModal({ token:$session.get('jwt'), id:freelancer.id, tipo:'Freelancer' })"
+                                        @click="openUserPreviewModal({ token:$session.get('jwt'), id:freelancer.id_freelancer, tipo:'Freelancer' })"
                                         > 
-                                            {{ freelancer.nombre }} {{ freelancer.apellido }} 
+                                            {{ freelancer.nombre_freelancer }} {{ freelancer.apellido_freelancer }} 
                                         </v-btn>
                                     </td>
                                     <td> 
@@ -111,6 +111,7 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import axios from 'axios'
 
 export default {
     name: 'Project',
@@ -126,13 +127,7 @@ export default {
             showDetalle: false,
             showInteresados: false,
 
-            interesados: [
-                { id: 1, nombre: 'Lucas', apellido: 'Torres'},
-                { id: 2, nombre: 'Felix', apellido: 'Bido'},
-                { id: 3, nombre: 'Lucas', apellido: 'Torres'},
-                { id: 4, nombre: 'Feix', apellido: 'Bido'},
-                { id: 5, nombre: 'Lucas', apellido: 'Torres'},
-            ]
+            interesados: []
         }
     },
     methods: {
@@ -141,6 +136,22 @@ export default {
     computed: {
         ...mapGetters(["userData"])
     },
-    props: ["projectData"]
+    props: ["projectData"],
+    async created() {
+        try {
+            let config = {
+                params: {
+                    id_proyecto: this.projectData.id
+                },
+                headers: {
+                    "x-access-token": this.$session.get('jwt'),
+                }
+            }
+            let res = await axios.get('/api/consultarInteresado', config);
+            this.interesados = res.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 }
 </script>

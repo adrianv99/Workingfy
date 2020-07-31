@@ -1,5 +1,7 @@
 const pool = require('../db_connection');
 
+const verificarInteresados = require('../controllers/verificarInteresados.controller');
+
 const proyecto = {};
 
 
@@ -16,10 +18,10 @@ proyecto.insertar = async (datos) => {
 };
 
 //consulta para el explorar del freelancer
-proyecto.consultar = async () => {
+proyecto.consultar = async (id_freelancer) => {
     try {
         
-        const proyectos = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
+        const todosLosProyectos = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
         proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento, proyecto.fecha AS fecha,
         profesion.nombre AS profesion, estado.nombre AS nombre_estado, pais.nombre AS nombre_pais,
         cliente.nombre AS nombre_cliente, cliente.apellido AS apellido_cliente, cliente.id AS id_cliente
@@ -29,8 +31,11 @@ proyecto.consultar = async () => {
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
         WHERE proyecto.seguimiento='iniciado'`);
-        //OJO: Hay que crear una funcion donde verifique que el freelancer no este en la lista de interesados de algunos proyectos,
-        //para que este no pueda enviar multiples solicitudes de trabajo
+        
+        //Filtramos los proyectos a proyectos que el freelancer
+        //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
+        const proyectos = await verificarInteresados(todosLosProyectos ,id_freelancer);
+        
         return proyectos;
 
     } catch (error) {
@@ -39,7 +44,7 @@ proyecto.consultar = async () => {
     }
 };
 
-proyecto.consultarPorProfesion = async (profesion) => {
+proyecto.consultarPorProfesion = async (profesion, id_freelancer) => {
     try {
 
         const proyectosPorProfesion = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
@@ -53,7 +58,11 @@ proyecto.consultarPorProfesion = async (profesion) => {
         INNER JOIN pais ON estado.id_pais = pais.id
         WHERE proyecto.id_profesion=${profesion} AND proyecto.seguimiento='iniciado'`);
 
-        return proyectosPorProfesion;
+        //Filtramos los proyectos a proyectos que el freelancer
+        //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
+        const proyectos = await verificarInteresados(proyectosPorProfesion ,id_freelancer);
+        
+        return proyectos;
 
     } catch (error) {
         console.log(error)
@@ -61,7 +70,7 @@ proyecto.consultarPorProfesion = async (profesion) => {
     }
 };
 
-proyecto.consultarPorUbicacion = async (ubicacion) => {
+proyecto.consultarPorUbicacion = async (ubicacion, id_freelancer) => {
     try {
 
         const proyectosPorUbicacion = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
@@ -75,7 +84,11 @@ proyecto.consultarPorUbicacion = async (ubicacion) => {
         INNER JOIN pais ON estado.id_pais = pais.id
         WHERE proyecto.ubicacion=${ubicacion} AND proyecto.seguimiento='iniciado'`);
 
-        return proyectosPorUbicacion;
+        //Filtramos los proyectos a proyectos que el freelancer
+        //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
+        const proyectos = await verificarInteresados(proyectosPorUbicacion ,id_freelancer);
+        
+        return proyectos;
 
     } catch (error) {
         console.log(error)
@@ -83,7 +96,7 @@ proyecto.consultarPorUbicacion = async (ubicacion) => {
     }
 };
 
-proyecto.consultarPorFecha = async (inicio, fin) => {
+proyecto.consultarPorFecha = async (inicio, fin, id_freelancer) => {
     try {
 
         const proyectosPorFecha = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
@@ -96,10 +109,12 @@ proyecto.consultarPorFecha = async (inicio, fin) => {
         INNER JOIN estado ON proyecto.ubicacion = estado.id
         INNER JOIN pais ON estado.id_pais = pais.id
         WHERE proyecto.seguimiento='iniciado' AND proyecto.fecha>='${inicio}' AND proyecto.fecha<='${fin}'`);
-        console.log(inicio);
-        console.log(fin);
-        console.log(proyectosPorFecha);
-        return proyectosPorFecha;
+        
+        //Filtramos los proyectos a proyectos que el freelancer
+        //no le ha enviado solicitud de trabajo (para evitar que le envie de nuevo)
+        const proyectos = await verificarInteresados(proyectosPorFecha ,id_freelancer);
+        
+        return proyectos;
 
     } catch (error) {
         console.log(error)
@@ -107,6 +122,7 @@ proyecto.consultarPorFecha = async (inicio, fin) => {
     }
 };
 
+//consulta para los proyectos que se vizualizan en el panel del freelancer (proyectos con los que trabaja)
 proyecto.consultarProyectoFreelancer = async (id) => {
     try {
         
@@ -128,6 +144,7 @@ proyecto.consultarProyectoFreelancer = async (id) => {
     }
 }
 
+//consulta para los proyectos que se vizualizan en el panel del cliente (proyectos con los que trabaja)
 proyecto.consultarProyectoCliente = async (id) => {
     try {
         //Consulta a los proyectos iniciados

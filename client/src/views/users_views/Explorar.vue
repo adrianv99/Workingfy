@@ -133,7 +133,7 @@
             <div  v-if="userData.id_profesion">
                 <v-layout v-for="(proyecto, index) in projectsData" :key="index++" wrap >
                     <v-flex md8>
-                
+                        
                         <Post class="my-10" :postData="proyecto" /> 
 
                     </v-flex>
@@ -230,16 +230,13 @@ export default {
             token: this.$session.get('jwt'),
             filterBy: ''
         }
-        //verificamos si el usuario es cliente o freelancer
-        //asi decidir si traer publicaciones de proyectos o perfiles de freelancers
-        if(this.userData.id_profesion) {
-            //obteniendo publicaciones de proyectos
-            this.filterProjects(params);
-        }
-        else {
-            //obteniendo perfiles de freelancers
-            this.filterFreelancers(params);
-        }
+
+        //obteniendo publicaciones de proyectos
+        this.filterProjects(params);
+
+        //obteniendo perfiles de freelancers
+        this.filterFreelancers(params);
+
     },
 }
 </script>

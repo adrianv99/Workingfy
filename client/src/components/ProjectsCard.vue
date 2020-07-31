@@ -8,7 +8,7 @@
                 </v-icon>
                 <span class="title font-weight-bold">Proyectos</span>
             </v-card-title>
-
+            
             <v-card-text>        
                 <v-container>
                     <v-row v-if="!userData.id_profesion">

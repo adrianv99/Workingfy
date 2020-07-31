@@ -141,7 +141,7 @@ export default {
     },
     methods: {
         ...mapActions(["closeCreateProjectModal","fetchProfessions",
-        "fetchCountries","fetchCitiesByCotuntry",]),
+        "fetchCountries","fetchCitiesByCotuntry","fetchProjects"]),
 
         async crearProyecto(){
             try {
@@ -163,6 +163,7 @@ export default {
                 const res = await axios.post('/api/insertarProyecto', proyecto, config);
                 if(res.data.message === 'success'){
                     this.closeCreateProjectModal();
+                    this.fetchProjects(this.$session.get('jwt'))
                     this.snackbarData = { active: true, text: 'Proyecto creado correctamente', color: 'success', icon: 'mdi-account-check'};
                     this.loading = false;
                 }
