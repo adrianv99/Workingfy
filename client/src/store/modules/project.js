@@ -31,7 +31,7 @@ const actions = {
         let res = await axios.post('/api/filtrarProyecto', params,config);
 
         commit('setProjects', res.data);
-    }
+    },
 };
 
 const mutations = {

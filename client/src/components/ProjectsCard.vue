@@ -23,8 +23,8 @@
                             </v-btn>
                         </v-col>
                     </v-row>
-                    <v-row>
-            
+                    <v-row v-if="projectsData.length > 0">
+                        
                         <v-col 
                         v-for="project in projectsData" 
                         :key="project.id"
@@ -35,6 +35,15 @@
                             <Project :projectData="project" />
                         </v-col>
 
+                    </v-row>
+                    <v-row v-else>
+                        <v-col
+                        cols="12" 
+                        md="4" 
+                        xs="12"
+                        >
+                            <span class="title"> No hay proyectos en curso...</span>
+                        </v-col>
                     </v-row>
                 </v-container>
             </v-card-text> 
@@ -51,11 +60,6 @@ export default {
     name: 'ProjectsCard',
     components: {
         Project
-    },
-    data() {
-        return {
-            
-        }
     },
     methods: {
         ...mapActions(["openCreateProjectModal","fetchProjects"])

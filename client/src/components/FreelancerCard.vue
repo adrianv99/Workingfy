@@ -54,9 +54,9 @@
 
                   <v-divider></v-divider>
 
-                  <h2 class="my-8">
+                  <h2 class="my-8" v-if="freelancerData.proyectosTerminados">
                       <v-icon> mdi-checkbox-marked </v-icon> Trabajos completados: 
-                      <span class="primary--text">{{ trabajosCompletados }}</span>
+                      <span class="primary--text">{{ freelancerData.proyectosTerminados.length }}</span>
                   </h2>
 
                    <v-divider></v-divider>
@@ -68,12 +68,21 @@
                       Trabajos que ha realizado: 
                     </h2>
                     <v-simple-table height="270px">
-                        <tbody>
-                          <tr v-for="item in trabajos" :key="item">
+                        <tbody v-if="freelancerData.proyectosTerminados.length > 0">
+                          <tr v-for="proyecto in freelancerData.proyectosTerminados" :key="proyecto.id">
                             <td>
-                              <h3 class="primary--text">{{ item }}</h3>
+                              <h3 class="primary--text">{{ proyecto.asunto }}</h3>
                             </td>
                           </tr>
+                        </tbody>
+                        <tbody v-else>
+                            <tr>
+                              <td>
+                                <h3 class="primary--text">
+                                  Ninguno por el momento...
+                                </h3>
+                              </td>
+                            </tr>
                         </tbody>
                     </v-simple-table>
                </v-flex>

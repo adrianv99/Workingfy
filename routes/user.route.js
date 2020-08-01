@@ -5,9 +5,11 @@ const router = express.Router();
 const Cliente = require('../models/cliente');
 const Freelancer = require('../models/freelancer');
 const Profesion = require('../models/profesion');
+const Proyecto = require('../models/proyecto');
 
 //controllers
 const verificarToken = require('../controllers/auth.controller');
+const freelancer = require('../models/freelancer');
 
 
 router.post('/insertarCliente', async (req, res) => {
@@ -23,10 +25,20 @@ router.post('/insertarFreelancer', async (req, res) => {
 router.get('/consultarPorId', verificarToken, async (req, res) => {
     if(req.roll === 'Cliente'){
         const cliente = await Cliente.consultarPorId(req.userId);
+        const rating = await Cliente.consultarRating(req.userId);
+        const proyectosTerminados = await Proyecto.consultarProyectosFinalizados(req.roll, req.userId);
+        
+        cliente[0].rating = rating;
+        cliente[0].proyectosTerminados = proyectosTerminados;
         res.json(cliente);
     }
     else if(req.roll === 'Freelancer'){
         const freelancer = await Freelancer.consultarPorId(req.userId);
+        const rating = await Freelancer.consultarRating(req.userId);
+        const proyectosTerminados = await Proyecto.consultarProyectosFinalizados(req.roll, req.userId);
+
+        freelancer[0].proyectosTerminados = proyectosTerminados;
+        freelancer[0].rating = rating;
         res.json(freelancer);
     }
 });
@@ -69,6 +81,7 @@ router.post('/filtrarFreelancers', verificarToken, async (req, res) => {
         //agregando el rating a cada freelancer
         for( x = 0; x < freelancers.length; x++){
             freelancers[x].rating = await Freelancer.consultarRating(freelancers[x].id);
+            freelancers[x].proyectosTerminados = await Proyecto.consultarProyectosFinalizados('Freelancer', freelancers[x].id);
         }
 
         res.json(freelancers);
@@ -79,6 +92,7 @@ router.post('/filtrarFreelancers', verificarToken, async (req, res) => {
         //agregando el rating a cada freelancer
         for( x = 0; x < freelancers.length; x++){
             freelancers[x].rating = await Freelancer.consultarRating(freelancers[x].id);
+            freelancers[x].proyectosTerminados = await Proyecto.consultarProyectosFinalizados('Freelancer', freelancers[x].id);
         }
        
         res.json(freelancers);
@@ -89,10 +103,12 @@ router.post('/consultarFreelancerProfile', verificarToken, async (req, res) => {
     const freelancer = await Freelancer.consultarPorId(req.body.id);
     const rating = await Freelancer.consultarRating(req.body.id);
     const profesion = await Profesion.consultarPorId(freelancer[0].id_profesion);
+    const proyectosTerminados = await Proyecto.consultarProyectosFinalizados('Freelancer', req.body.id);
     
     // añadiendo la propiedades al perfil 
     freelancer[0].rating = rating;
     freelancer[0].profesion = profesion[0].nombre;
+    freelancer[0].proyectosTerminados = proyectosTerminados;
 
     //eliminando propiedades innecesariass para esta peticion
     delete freelancer[0].contrasena;
@@ -107,9 +123,11 @@ router.post('/consultarFreelancerProfile', verificarToken, async (req, res) => {
 router.post('/consultarClienteProfile', verificarToken, async (req, res) => {
     const cliente = await Cliente.consultarPorId(req.body.id);
     const rating = await Cliente.consultarRating(req.body.id);
+    const proyectosTerminados = await Proyecto.consultarProyectosFinalizados('Cliente', req.body.id);
 
     // añadiendo la propiedades al perfil 
     cliente[0].rating = rating;
+    cliente[0].proyectosTerminados = proyectosTerminados;
 
     //eliminando propiedades innecesariass para esta peticion
     delete cliente[0].contrasena;

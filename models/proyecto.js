@@ -216,6 +216,28 @@ proyecto.consultarProyectoCliente = async (id) => {
     }
 }
 
+proyecto.consultarProyectosFinalizados = async (user_type, user_id) => {
+    try {
+        
+        //proyectos terminados por el cliente
+        if(user_type === 'Cliente') {
+            const proyectos = await pool.query(`SELECT * FROM proyecto WHERE id_cliente=${user_id} AND seguimiento='finalizado'`);
+            return proyectos;
+        }
+
+        //proyectos terminados por el freelancer
+        if(user_type === 'Freelancer') {
+            const proyectos = await pool.query(`SELECT * FROM proyecto WHERE id_freelancer=${user_id} AND seguimiento='finalizado'`);
+            return proyectos;
+        }
+
+        
+    } catch (error) {
+        console.log(error)
+        return 'Error en los servicios'
+    }
+}
+
 
 
 module.exports = proyecto;

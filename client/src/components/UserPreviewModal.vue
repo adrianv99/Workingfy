@@ -45,16 +45,9 @@
 
             <v-divider></v-divider>
 
-            <h2 class="my-6">
-              <v-icon>  mdi-bookmark  </v-icon> Trabajos publicados: 
-              <span class="primary--text">8</span>
-            </h2>
-
-            <v-divider></v-divider>
-
-            <h2 class="my-6">
+            <h2 class="my-6" v-if="userProfile.proyectosTerminados">
                <v-icon> mdi-checkbox-marked </v-icon> Trabajos completados: 
-               <span class="primary--text">5</span>
+               <span class="primary--text">{{ userProfile.proyectosTerminados.length }}</span>
             </h2>
 
         </v-card-text>

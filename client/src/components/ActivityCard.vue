@@ -14,15 +14,21 @@
                     <v-row justify="center" align="center" class="text-center">
                         <v-col cols="12" md=4>
                             <h3>Total de estrellas obtenidas</h3>
-                            <h1 class="my-5 primary--text">359</h1>
+                            <h1 class="my-5 primary--text" v-if="userData.rating">
+                                {{ userData.rating.totalEstrellas }}
+                            </h1>
                         </v-col>
                         <v-col cols="12" md=4>
                             <h3>Proyectos finalizados</h3>
-                            <h1 class="my-5 primary--text">3</h1>
+                            <h1 class="my-5 primary--text" v-if="userData.proyectosTerminados">
+                                {{ userData.proyectosTerminados.length }}
+                            </h1>
                         </v-col>
                         <v-col cols="12" md=4>
                             <h3>Proyectos en progreso</h3>
-                            <h1 class="my-5 primary--text">19</h1>
+                            <h1 class="my-5 primary--text">
+                                {{ projectsData.length }}
+                            </h1>
                         </v-col>
                     </v-row>
                 </v-container>
@@ -33,16 +39,12 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
     name: 'ActivityCard',
-    data() {
-        return {
-            nombre: 'Rodolfo',
-            apellido: 'Guzman',
-            telefono: '8095733369',
-            correo: 'rodolfo69@gmail.com',
-            direccion: 'La Vega, Gamundy',
-        }
+    computed: {
+        ...mapGetters(["userData","projectsData"])
     },
 }
 </script>

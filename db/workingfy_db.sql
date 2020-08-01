@@ -3,10 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 28-07-2020 a las 16:06:09
+-- Tiempo de generación: 01-08-2020 a las 03:14:46
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.2.1
-
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -47,13 +46,7 @@ CREATE TABLE `cliente` (
 --
 
 INSERT INTO `cliente` (`id`, `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `rating`, `estado`) VALUES
-(1, 'Adrian', 'Vinas', 'adrianvinas@gmail.com', '8095733368', '40242481493', 'La Vega', '?p?|zԃrq?)??', 0, 'A'),
-(2, 'Adrian', 'Vinas', 'adrianvina1s@gmail.com', '8095733368', '40242481493', 'La Vega ', '&??tIXA}MR?f?=u', 0, 'A'),
-(3, 'adrian', 'vinas', 'adriancliente@gmail.com', '8095733369', '20121210121', 'La Vega, Gamundy', 'YWRyaWFuMTIzNA==', 0, 'A'),
-(4, 'samuiel', 'asdavsvas', 'samuel@gmail.com', '12124e1', '12113121212', 'asdsfdfs', 'c2FtdWVsMTIzNA==', 0, 'A'),
-(5, 'Juan', 'Lucas', 'juan@gmail.com', '8095733369', '21010101112', 'La Vega', 'anVhbjEyMzQ=', 0, 'A'),
-(6, 'Juan', 'Lucas', 'juan1@gmail.com', '8095733369', '21010101112', 'La Vega', 'anVhbjEyMzQ=', 0, 'A'),
-(7, 'Juan', 'Lucas', 'juan2@gmail.com', '8095733369', '21010101112', 'La Vega', 'anVhbjEyMzQ=', 0, 'A');
+(1, 'Adrian ', 'Cliente1', 'cliente@gmail.com', '8095733369', '40242481493', 'La Vega, La loteria', 'MTIzNDU2Nzg=', 3, 'A');
 
 -- --------------------------------------------------------
 
@@ -2095,9 +2088,7 @@ CREATE TABLE `freelancer` (
 --
 
 INSERT INTO `freelancer` (`id`, `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `rating`, `id_profesion`, `estado`) VALUES
-(1, 'adrian ', 'vinas', 'adrianf@gmail.com', '8095733369', '40512121211', 'La Vega, La Loteria', 'adrian1234', 0, 1, 'A'),
-(2, 'AdrianFreelancer', 'Freelancer', 'adrianfreelancer@gmail.com', '8095733369', '40212121211', 'La Vega, La Loteria', 'YWRyaWFuMTIzNA==', 0, 1, 'A'),
-(3, 'Juan', 'Lucaaaa', 'juanfr@gmail.com', '8095731121', '12121212121', 'La Vega', 'anVhbjEyMzQ1', 0, 1, 'A');
+(1, 'Lucas', 'Freelancer1', 'freelancer@gmail.com', '8095734812', '40121942121', 'Santiago, Las matas', 'MTIzNDU2Nzg=', 0, 2, 'A');
 
 -- --------------------------------------------------------
 
@@ -2111,6 +2102,13 @@ CREATE TABLE `interesado` (
   `id_proyecto` int(11) NOT NULL COMMENT 'Proyecto que recibirá interesados ',
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del interesado, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `interesado`
+--
+
+INSERT INTO `interesado` (`id`, `id_freelancer`, `id_proyecto`, `estado`) VALUES
+(1, 1, 1, 'A');
 
 -- --------------------------------------------------------
 
@@ -2376,16 +2374,21 @@ CREATE TABLE `proyecto` (
   `detalle` longtext COLLATE utf8_spanish_ci NOT NULL COMMENT 'Descripción detalla de que consiste el proyecto',
   `id_cliente` int(11) NOT NULL COMMENT 'Cliente que publico el proyecto',
   `id_freelancer` int(11) DEFAULT NULL COMMENT 'Freelancer que trabajara en el proyecto',
+  `id_profesion` int(11) NOT NULL,
   `seguimiento` varchar(50) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Campo de control del transcurso del proyecto, con valores de: iniciado, en progreso, finalizado',
   `ubicacion` int(11) NOT NULL COMMENT 'Lugar donde sera desarrollado el proyecto',
-  `fecha_inicio` date NOT NULL COMMENT 'Fecha de publicación del proyecto',
-  `fecha_terminado` date DEFAULT NULL COMMENT 'Fecha de cuando finalizo el proyecto',
-  `acuerdo_finalizacion_cliente` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el cliente esta de acuerdo con la finalizacion del proyecto',
-  `acuerdo_finalizacion_freelancer` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el freelancer esta de acuerdo con la finalizacion del proyecto',
-  `rating_cliente` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el cliente recibió una calificacion del proyecto ',
-  `rating_freelancer` varchar(10) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el freelancer recibió una calificacion del proyecto ',
+  `fecha` date NOT NULL COMMENT 'Fecha de publicación del proyecto',
+  `rating_cliente` varchar(15) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el cliente recibió una calificacion del proyecto ',
+  `rating_freelancer` varchar(15) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el freelancer recibió una calificacion del proyecto ',
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del proyecto, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
+
+--
+-- Volcado de datos para la tabla `proyecto`
+--
+
+INSERT INTO `proyecto` (`id`, `asunto`, `detalle`, `id_cliente`, `id_freelancer`, `id_profesion`, `seguimiento`, `ubicacion`, `fecha`, `rating_cliente`, `rating_freelancer`, `estado`) VALUES
+(1, 'Arreglar toma corriente', 'tengo un toma corriente quemado en mi hogar', 1, 1, 2, 'en curso', 2098, '2020-07-31', 'calificado', 'sin calificar', 'A');
 
 --
 -- Índices para tablas volcadas
@@ -2438,7 +2441,8 @@ ALTER TABLE `proyecto`
   ADD PRIMARY KEY (`id`),
   ADD KEY `id_cliente` (`id_cliente`),
   ADD KEY `id_freelancer` (`id_freelancer`),
-  ADD KEY `ubicacion` (`ubicacion`);
+  ADD KEY `ubicacion` (`ubicacion`),
+  ADD KEY `id_profesion` (`id_profesion`);
 
 --
 -- AUTO_INCREMENT de las tablas volcadas
@@ -2448,7 +2452,7 @@ ALTER TABLE `proyecto`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de cliente', AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de cliente', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -2460,13 +2464,13 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `freelancer`
 --
 ALTER TABLE `freelancer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de freelancer', AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de freelancer', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `interesado`
 --
 ALTER TABLE `interesado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro del interesado';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro del interesado', AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
@@ -2484,7 +2488,7 @@ ALTER TABLE `profesion`
 -- AUTO_INCREMENT de la tabla `proyecto`
 --
 ALTER TABLE `proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica de registro de proyecto';
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica de registro de proyecto', AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
@@ -2515,7 +2519,8 @@ ALTER TABLE `interesado`
 ALTER TABLE `proyecto`
   ADD CONSTRAINT `proyecto_ibfk_1` FOREIGN KEY (`id_freelancer`) REFERENCES `freelancer` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `proyecto_ibfk_2` FOREIGN KEY (`id_cliente`) REFERENCES `cliente` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `proyecto_ibfk_3` FOREIGN KEY (`ubicacion`) REFERENCES `estado` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `proyecto_ibfk_3` FOREIGN KEY (`ubicacion`) REFERENCES `estado` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `proyecto_ibfk_4` FOREIGN KEY (`id_profesion`) REFERENCES `profesion` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
