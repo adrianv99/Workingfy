@@ -9,20 +9,37 @@ const Proyecto = require('../models/proyecto');
 
 //controllers
 const verificarToken = require('../controllers/auth.controller');
-const freelancer = require('../models/freelancer');
+const enviarCorreo = require('../controllers/enviarCorreo.controller');
 
 
 router.post('/insertarCliente', async (req, res) => {
     const result = await Cliente.insertar(req.body);
+
+    const correoResult = await enviarCorreo({
+        destinatario: req.body.correo,
+        asunto: 'Bienvenido a Workingfy',
+        cuerpo: 'Te haz registrado en workingfy de forma correcta'
+    });
+    console.log(correoResult);
+
     res.json({ message: result });
 });
 
 router.post('/insertarFreelancer', async (req, res) => {
     const result = await Freelancer.insertar(req.body);
+
+    const correoResult = await enviarCorreo({
+        destinatario: req.body.correo,
+        asunto: 'Bienvenido a Workingfy',
+        cuerpo: 'Te haz registrado en workingfy de forma correcta'
+    });
+    console.log(correoResult);
+    
     res.json({ message: result });
 });
 
 router.get('/consultarPorId', verificarToken, async (req, res) => {
+
     if(req.roll === 'Cliente'){
         const cliente = await Cliente.consultarPorId(req.userId);
         const rating = await Cliente.consultarRating(req.userId);
