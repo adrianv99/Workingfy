@@ -12,7 +12,7 @@ loginCrtl.signin = async (req, res) => {
         var userId = null;
 
         //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla cliente,
-        var datosCliente = await pool.query("SELECT id, correo, contrasena FROM cliente WHERE correo='"+req.body.correo+"'");
+        var datosCliente = await pool.query("SELECT id, correo, contrasena FROM cliente WHERE correo='"+req.body.correo+"' AND estado='A' ");
         
         if(Object.entries(datosCliente).length === 1){
             //Procede a desencriptar la contraseña y compararla con la que envio el usuario
@@ -25,7 +25,7 @@ loginCrtl.signin = async (req, res) => {
         }
         
         //realizamos una  consulta para ver si el correo y la contraseña son correctos en la tabla freelancer,
-        var datosFreelancer = await pool.query("SELECT id, correo, contrasena FROM freelancer WHERE correo='"+req.body.correo+"'");
+        var datosFreelancer = await pool.query("SELECT id, correo, contrasena FROM freelancer WHERE correo='"+req.body.correo+"' AND estado='A'");
      
         if(Object.entries(datosFreelancer).length === 1){
             //Procede a desencriptar la contraseña y compararla con la que envio el usuario

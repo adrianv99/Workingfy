@@ -84,7 +84,9 @@ freelancer.editar = async (datos, correoNuevo) => {
 
             datos.contrasena= encode.encode(""+datos.contrasena+"", 'base64')
     
-            await pool.query(`UPDATE freelancer set ? WHERE id=${datos.id}`, datos);
+            await pool.query(`UPDATE freelancer set nombre='${datos.nombre}', apellido='${datos.apellido}', correo='${datos.correo}',
+            telefono='${datos.telefono}', direccion='${datos.direccion}', contrasena='${datos.contrasena}', id_profesion='${datos.id_profesion}'
+            WHERE id=${datos.id}`);
             return 'success'
         }else{
             return 'El correo ingresado se encuentra en uso por otra cuenta'
@@ -111,6 +113,17 @@ freelancer.insertar = async (datos) => {
     }catch(error){
         console.log(error)
         return 'Error en los servicios'
+    }
+};
+
+freelancer.eliminar = async (id) => {
+    try {
+    
+        await pool.query(`UPDATE freelancer set estado='I' WHERE id=${id}`);
+        return 'success';
+    } catch (error) {
+        console.log(error);
+        return 'Error en los servicios de db'
     }
 };
 

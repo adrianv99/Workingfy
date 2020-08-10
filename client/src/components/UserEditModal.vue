@@ -126,7 +126,10 @@
 
                         <v-spacer></v-spacer>
 
-                        <v-btn color="error">
+                        <v-btn 
+                        color="error"
+                        @click="eliminarUsuario()"
+                        >
                             <v-icon class="mx-1">error</v-icon>
                             eliminar cuenta
                         </v-btn>
@@ -204,6 +207,28 @@ export default {
             } catch (error) {
                 console.log(error);
                 this.loading = false;
+            }
+        },
+        async eliminarUsuario() {
+            try {
+    
+                let config = {
+                    headers: {
+                        "x-access-token":  this.$session.get('jwt'),
+                    }
+                }
+
+                const res = await axios.post('/api/eliminarUsuario', this.userData,config);
+                if(res.data.message === 'success'){
+                    this.snackbarData = { active: true, text: 'Usuario eliminado correctamente', color: 'success', icon: 'mdi-account-check'};
+                    this.$session.destroy();
+                    this.$router.push('/login');
+                }
+                else{
+                    this.snackbarData = { active: true, text: `${res.data.message}`, color: 'error', icon: 'error'};
+                }
+            } catch (error) {
+                console.log(error);
             }
         }
     },

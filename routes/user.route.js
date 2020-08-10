@@ -90,6 +90,17 @@ router.post('/editarUsuario', verificarToken, async (req, res) => {
     
 });
 
+router.post('/eliminarUsuario', verificarToken, async (req, res) => {
+    if(req.roll === 'Cliente'){
+        const result = await Cliente.eliminar(req.userId);
+        res.json({ message: result});
+    }
+    else if(req.roll === 'Freelancer'){
+        const result = await Freelancer.eliminar(req.userId);
+        res.json({ message: result});
+    }
+});
+
 router.post('/filtrarFreelancers', verificarToken, async (req, res) => {
     //explorar cliente
     if(req.body.filterBy === ''){
