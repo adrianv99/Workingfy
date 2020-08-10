@@ -57,6 +57,7 @@
                         asunto: projectData.asunto,
                         user: `${projectData.nombre_trabajador} ${projectData.apellido_trabajador}`,
                         id_user: projectData.id_trabajador,
+                        correo: projectData.correo_trabajador,
                         id_proyecto: projectData.id
                     }
                 )"

@@ -5,7 +5,7 @@ const Proyecto = require('../models/proyecto');
 
 //controllers
 const verificarToken = require('../controllers/auth.controller');
-const proyecto = require('../models/proyecto');
+const enviarCorreo = require('../controllers/enviarCorreo.controller');
 
 // ruta para creacion del proyecto
 router.post('/insertarProyecto', verificarToken, async (req, res) => {
@@ -67,6 +67,14 @@ router.post('/filtrarProyecto', verificarToken, async (req, res) => {
 //ruta para calificar proyecto
 router.post('/calificarProyecto', verificarToken, async (req, res) => {
     const result = await Proyecto.calificar(req.body, req.roll);
+
+    const correoResult = await enviarCorreo({
+        destinatario: req.body.correo,
+        asunto: 'Le han calificado un proyecto',
+        cuerpo: `Usted ha recibido ${req.body.estrellas} estrellas en el proyecto ${req.body.asunto}`
+    });
+    console.log(correoResult);
+
     res.json({ message: result });
 });
 

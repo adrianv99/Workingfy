@@ -14,7 +14,7 @@ async function enviarCorreo( correo ) {
         secure: false,
         auth: {
             user: 'workingfy09@gmail.com',
-            pass: '' // contacta con el desarrollador para que te facilite la clave
+            pass: 'workingfy1234!' // contacta con el desarrollador para que te facilite la clave
         },
         tls: {
             rejectUnauthorized: false

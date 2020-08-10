@@ -104,6 +104,8 @@ export default {
             let body = {
                 id_proyecto: this.endingData.id_proyecto,
                 id_user: this.endingData.id_user,
+                correo: this.endingData.correo,
+                asunto: this.endingData.asunto,
                 estrellas: this.starts
             }
 

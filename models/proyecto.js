@@ -169,7 +169,7 @@ proyecto.consultarProyectoFreelancer = async (id) => {
         const proyectos = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
         proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento,
         proyecto.fecha AS fecha, estado.nombre AS nombre_estado, pais.nombre AS nombre_pais,
-        cliente.nombre AS nombre_trabajador, cliente.apellido AS apellido_trabajador, cliente.id AS id_trabajador
+        cliente.correo AS correo_trabajador, cliente.nombre AS nombre_trabajador, cliente.apellido AS apellido_trabajador, cliente.id AS id_trabajador
         FROM proyecto 
         INNER JOIN cliente ON proyecto.id_cliente = cliente.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
@@ -200,7 +200,7 @@ proyecto.consultarProyectoCliente = async (id) => {
         const proyectosEnCurso = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
         proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento,
         proyecto.fecha AS fecha, estado.nombre AS nombre_estado, pais.nombre AS nombre_pais,
-        freelancer.nombre AS nombre_trabajador, freelancer.apellido AS apellido_trabajador, freelancer.id AS id_trabajador
+        freelancer.correo AS correo_trabajador, freelancer.nombre AS nombre_trabajador, freelancer.apellido AS apellido_trabajador, freelancer.id AS id_trabajador
         FROM proyecto 
         INNER JOIN freelancer ON proyecto.id_freelancer = freelancer.id
         INNER JOIN estado ON proyecto.ubicacion = estado.id
@@ -238,6 +238,21 @@ proyecto.consultarProyectosFinalizados = async (user_type, user_id) => {
     }
 }
 
+proyecto.consultarPorId = async (id) => {
+    try {
+        const proyecto = await pool.query(`SELECT proyecto.id AS id, proyecto.asunto AS asunto, proyecto.detalle AS detalle,
+        proyecto.id_freelancer AS id_freelancer, proyecto.seguimiento AS seguimiento, proyecto.fecha AS fecha, 
+        cliente.nombre AS nombre_cliente, cliente.apellido AS apellido_cliente, cliente.correo AS correo_cliente, cliente.id AS id_cliente
+        FROM proyecto 
+        INNER JOIN cliente ON proyecto.id_cliente = cliente.id
+        WHERE proyecto.id=${id} `);
+
+        return proyecto;
+    } catch (error) {
+        console.log(error)
+        return 'Error en los servicios'
+    }
+}
 
 
 module.exports = proyecto;
