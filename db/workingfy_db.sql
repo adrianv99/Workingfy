@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-08-2020 a las 03:14:46
+-- Tiempo de generación: 10-08-2020 a las 22:28:30
 -- Versión del servidor: 10.1.30-MariaDB
 -- Versión de PHP: 7.2.1
 
@@ -40,13 +40,6 @@ CREATE TABLE `cliente` (
   `rating` float NOT NULL COMMENT 'Calificación de los trabajos hechos por el cliente',
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del cliente, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `cliente`
---
-
-INSERT INTO `cliente` (`id`, `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `rating`, `estado`) VALUES
-(1, 'Adrian ', 'Cliente1', 'cliente@gmail.com', '8095733369', '40242481493', 'La Vega, La loteria', 'MTIzNDU2Nzg=', 3, 'A');
 
 -- --------------------------------------------------------
 
@@ -2083,13 +2076,6 @@ CREATE TABLE `freelancer` (
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del freelancer, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
 
---
--- Volcado de datos para la tabla `freelancer`
---
-
-INSERT INTO `freelancer` (`id`, `nombre`, `apellido`, `correo`, `telefono`, `cedula`, `direccion`, `contrasena`, `rating`, `id_profesion`, `estado`) VALUES
-(1, 'Lucas', 'Freelancer1', 'freelancer@gmail.com', '8095734812', '40121942121', 'Santiago, Las matas', 'MTIzNDU2Nzg=', 0, 2, 'A');
-
 -- --------------------------------------------------------
 
 --
@@ -2102,13 +2088,6 @@ CREATE TABLE `interesado` (
   `id_proyecto` int(11) NOT NULL COMMENT 'Proyecto que recibirá interesados ',
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del interesado, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `interesado`
---
-
-INSERT INTO `interesado` (`id`, `id_freelancer`, `id_proyecto`, `estado`) VALUES
-(1, 1, 1, 'A');
 
 -- --------------------------------------------------------
 
@@ -2360,7 +2339,11 @@ CREATE TABLE `profesion` (
 
 INSERT INTO `profesion` (`id`, `nombre`, `descripcion`, `estado`) VALUES
 (1, 'Plomero', 'Técnico en trabajos de instalación, mantenimiento, reparación, etc., de las conducciones de agua y aparatos sanitarios de una vivienda o edificio.', 'A'),
-(2, ' Electricista', 'Persona que tiene por oficio colocar y reparar instalaciones eléctricas.', 'A');
+(2, ' Electricista', 'Persona que tiene por oficio colocar y reparar instalaciones eléctricas.', 'A'),
+(3, 'Programador', 'es aquella persona que elabora programas de computadora, ​ es decir escribe, depura y mantiene el código fuente de un programa informático, que ejecuta el hardware de una computadora, para realizar una tarea determinada. ', 'A'),
+(4, 'Carpintero', 'es el oficio de trabajar, cortar y labrar la madera y sus derivados. Su objetivo es cambiar la forma física de la materia prima para crear objetos útiles para el ser humano, como herramientas, puertas, ventanas, elementos para la construcción, molduras, juguetes, muebles de hogar u oficina, escritorios, librerías y otros. Por derivación, también se denomina carpintería al taller o tienda del carpintero; y a la obra o trabajo ejecutado por éste.', 'A'),
+(5, 'Fotografo', 'es aquella persona cuya actividad artística u ocupación consiste en tomar fotografías mediante el uso de una cámara u otro dispositivo capaz de almacenar una réplica bidimensional de la realidad.', 'A'),
+(6, 'abogado', 'es el profesional que ejerce la defensa jurídica en un juicio, así como los procesos judiciales y administrativos ocasionados o sufridos por ella.', '');
 
 -- --------------------------------------------------------
 
@@ -2382,13 +2365,6 @@ CREATE TABLE `proyecto` (
   `rating_freelancer` varchar(15) COLLATE utf8_spanish_ci DEFAULT NULL COMMENT 'Verifica si el freelancer recibió una calificacion del proyecto ',
   `estado` char(1) COLLATE utf8_spanish_ci NOT NULL COMMENT 'Control de actividad o inactividad del proyecto, con valor de A o I '
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_spanish_ci;
-
---
--- Volcado de datos para la tabla `proyecto`
---
-
-INSERT INTO `proyecto` (`id`, `asunto`, `detalle`, `id_cliente`, `id_freelancer`, `id_profesion`, `seguimiento`, `ubicacion`, `fecha`, `rating_cliente`, `rating_freelancer`, `estado`) VALUES
-(1, 'Arreglar toma corriente', 'tengo un toma corriente quemado en mi hogar', 1, 1, 2, 'en curso', 2098, '2020-07-31', 'calificado', 'sin calificar', 'A');
 
 --
 -- Índices para tablas volcadas
@@ -2452,7 +2428,7 @@ ALTER TABLE `proyecto`
 -- AUTO_INCREMENT de la tabla `cliente`
 --
 ALTER TABLE `cliente`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de cliente', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de cliente';
 
 --
 -- AUTO_INCREMENT de la tabla `estado`
@@ -2464,13 +2440,13 @@ ALTER TABLE `estado`
 -- AUTO_INCREMENT de la tabla `freelancer`
 --
 ALTER TABLE `freelancer`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de freelancer', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro de freelancer';
 
 --
 -- AUTO_INCREMENT de la tabla `interesado`
 --
 ALTER TABLE `interesado`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro del interesado', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave única del registro del interesado';
 
 --
 -- AUTO_INCREMENT de la tabla `pais`
@@ -2482,13 +2458,13 @@ ALTER TABLE `pais`
 -- AUTO_INCREMENT de la tabla `profesion`
 --
 ALTER TABLE `profesion`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica del registro de profesion', AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica del registro de profesion', AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `proyecto`
 --
 ALTER TABLE `proyecto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica de registro de proyecto', AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT COMMENT 'Clave unica de registro de proyecto';
 
 --
 -- Restricciones para tablas volcadas
