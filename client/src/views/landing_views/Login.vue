@@ -69,8 +69,8 @@ export default {
     },
     data() {
         return {
-            correo: '@gmail.com',
-            contrasena: '12345678',
+            correo: '',
+            contrasena: '',
 
             img: require('@/assets/SprintingDoodle.png'),
             loading: false,

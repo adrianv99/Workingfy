@@ -95,7 +95,7 @@ export default {
       steps: [
         '1- Publica tu proyecto (Es gratis).',
         '2- Recibe propuestas y elige a tu interes.',
-        '3- Realiza el pago de forma sencilla.'
+        '3- Califica la calidad del trabajo en el que participaste.'
       ]
       
     }

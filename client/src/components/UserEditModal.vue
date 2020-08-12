@@ -3,6 +3,29 @@
 
         <Snackbar :snackbar="snackbarData" />
 
+        <!-- mensaje de advertancia al tratar de eliminar cuenta -->
+        <v-snackbar
+        top=""
+        color="info"
+        v-model="warningMessage"
+        >
+            <h1 class="title">
+                <v-icon class="mr-1">
+                    warning
+                </v-icon>
+                ¿Seguro que desea eliminar su cuenta? 
+                <v-spacer></v-spacer>
+                (No hay acción reversible a esta)
+            </h1>
+            <v-btn color="red" dark @click="eliminarUsuario()" class="px-5">
+                Si
+            </v-btn>
+            <v-btn color="" dark @click="warningMessage = false" class="px-5">
+                No
+            </v-btn>
+        </v-snackbar>
+        <!-- mensaje de advertancia al tratar de eliminar cuenta -->
+
         <v-row justify="center" align="center">
             
             <v-dialog v-model="editUserModal" width="1200" persistent>
@@ -128,7 +151,7 @@
 
                         <v-btn 
                         color="error"
-                        @click="eliminarUsuario()"
+                        @click="warningMessage = true"
                         >
                             <v-icon class="mx-1">error</v-icon>
                             eliminar cuenta
@@ -156,6 +179,7 @@ export default {
     data(){
         return {
             showPass: false,
+            warningMessage: false,
             snackbarData: {},
             validar: true,
             lazy: false,

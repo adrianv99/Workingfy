@@ -49,7 +49,7 @@ export default {
             section2:[
               { icon: 'computer', text:'Puedes trabajar de manera remota. Tu eliges tus horarios y te organizas con tu tiempo.'},
               { icon: 'insert_comment', text:'Cientos de proyectos diarios que se adaptan a tus habilidades y experiencia.'},
-              { icon: 'verified_user', text:'Plataforma segura para trabajar, garantizando los pagos y cumplientos de expectativas.'},
+              { icon: 'verified_user', text:'Plataforma segura para trabajar, garantizando los cumplientos de expectativas.'},
             ],
             //datos que el componente Section3 debe renderizar
             section3:{
