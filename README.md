@@ -1,7 +1,13 @@
 # Workingfy
-Plataforma web que conecta freelancer con cliente.
+Plataforma que conecta freelancers con clientes (proyecto academico).
 
-## Project setup
+## Stack
+- Vue.js
+- Node.js
+- Express
+- MySql
+
+## Run
 ```
 npm i
 cd client
